@@ -28,6 +28,10 @@ class Room {
     get_p1() {
         return this.id_p1;
     }
+
+    get_p2() {
+        return this.id_p2;
+    }
 }
 
 module.exports = Room

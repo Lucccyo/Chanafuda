@@ -1,5 +1,4 @@
 class Player {
-    // static rooms = new Array();
     id;
     his_room_id;
     constructor(id) {
