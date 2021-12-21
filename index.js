@@ -1,3 +1,6 @@
+const Room = require('./functions/Room.js')
+const Player = require('./functions/Player.js')
+
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -5,8 +8,11 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+
+
+
 let nb_room = 0;
-let rooms = [];
+let room_temp = null;
 
 /* init */
 
@@ -25,18 +31,28 @@ const { is } = require("express/lib/request");
 
 /* nouveau client arrivé */
 io.on('connection', (socket) => {
-  console.log(socket.id, ' connected');
-  
-  // si la derniere room du tableau est pleine ou si il n'y a aucune room = on en créé une nouvelle
-  // sinon on ajoute le deuxieme joueur a la room
-  if(rooms.at(rooms.length).get_is_locked() || rooms.length == 0) {
-    rooms.push(new Room(nb_room, socket.id));
+
+  // new player connected
+  p = new Player(socket.id);
+  console.log(p.get_id(), ' connected');
+
+  // give him a gameroom
+  if(room_temp == null) {
+    console.log("premier player");
+    r = new Room(nb_room, p.get_id());
+    p.go_to_room(r);
+    room_temp = r;
     nb_room++;
   } else {
-    rooms.length().add_p2(socket);
+    console.log("deuxieme player");
+    room_temp.add_p2(p.get_id());
+    p.go_to_room(room_temp);
+    room_temp = null;
   }
 
-  console.log(socket.id, ' on room n° ', rooms.length.get_id_room);
+  console.log(socket.id, ' on room n° ', p.get_his_room().get_id_room());
+
+
 
   socket.on('disconnect', () => {
     console.log(socket.id, ' disconnected');

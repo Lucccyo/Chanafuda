@@ -5,11 +5,11 @@ class Room {
     id_p1;
     id_p2;
     name;
-    is_locked;
+    is_locked = false;
+    
     constructor(name, id_p1) {
         this.id_p1 = id_p1;
         this.name = name;
-        this.is_locked = false;
     }
 
     add_p2 (id_p2) {
@@ -25,4 +25,9 @@ class Room {
         return this.name;
     }
 
+    get_p1() {
+        return this.id_p1;
+    }
 }
+
+module.exports = Room
