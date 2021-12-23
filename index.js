@@ -1,5 +1,6 @@
-const Room = require('./functions/Room.js')
-const Player = require('./functions/Player.js')
+const Room = require('./classes/Room.js')
+const Player = require('./classes/Player.js')
+const Card = require('./classes/Card.js')
 
 const express = require('express');
 const app = express();
@@ -30,6 +31,7 @@ server.listen(3000, () => {
 });
 
 const { is } = require("express/lib/request");
+const { init } = require('./classes/Card.js');
 
 
 
@@ -43,19 +45,42 @@ io.on('connection', (socket) => {
   console.log(p.get_id(), ' connected');
 
   // give him a gameroom
+  var begin = false;
   if(room_temp == null) {
-    r = new Room(nb_room, p.get_id());
+    r = new Room(nb_room, p);
     p.go_to_room(r);
     room_temp = r;
     nb_room++;
   } else {
-    room_temp.add_p2(p.get_id());
+    begin = true;
+    room_temp.add_p2(p);
     p.go_to_room(room_temp);
     room_temp = null;
   }
 
   // display where he is
   console.log(socket.id, ' on room n° ', p.get_his_room().get_id_room());
+
+  if(begin) {
+    console.log("Distribution...")
+    var r = p.get_his_room();
+    Card.init(r.get_p1().get_hand(), r.get_p2().get_hand(), r.get_board());
+
+    console.log("p1 : ", r.get_p1().get_id())
+    console.log(Player.display_tab(r.get_p1().get_hand()));
+
+    console.log("board : ", r.get_id_room())
+    console.log(Player.display_tab(r.get_board()));
+
+    console.log("p2 : ", r.get_p2().get_id())
+    console.log(Player.display_tab(r.get_p2().get_hand()));
+  }
+
+
+
+
+
+
 
   socket.on('disconnect', () => {
     console.log(socket.id, ' disconnected');
@@ -69,7 +94,6 @@ io.on('connection', (socket) => {
 io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
     let sender;
-    let target_id;
     // we search the sender id to know his opponent
     for(i = 0 ; i < players.length ; i++) {
       if(socket.id == players[i].get_id()) {
@@ -77,13 +101,15 @@ io.on('connection', (socket) => {
       }
     }
 
-    let his_room = sender.get_his_room();
+    // let his_room = sender.get_his_room();
 
-    if(sender.get_id() == his_room.get_p1()) {
-      target_id = his_room.get_p2();
-    } else {
-      target_id = his_room.get_p1();
-    }
+    // if(sender.get_id() == his_room.get_p1()) {
+    //   target_id = his_room.get_p2();
+    // } else {
+    //   target_id = his_room.get_p1();
+    // }
+
+    target_id = sender.get_his_mate_id();
 
     // the msg is displayed on the room
     io.to(target_id).emit('chat message', msg);

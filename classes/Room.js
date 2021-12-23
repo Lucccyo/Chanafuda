@@ -2,18 +2,20 @@ const { is } = require("express/lib/request");
 
 class Room {
     NB_MAX = 2;
-    id_p1;
-    id_p2;
+    p1; 
+    p2;
     name;
     is_locked = false;
+    board;
     
-    constructor(name, id_p1) {
-        this.id_p1 = id_p1;
+    constructor(name, p1) {
+        this.p1 = p1;
         this.name = name;
+        this.board = new Array();
     }
 
-    add_p2 (id_p2) {
-        this.id_p2 = id_p2;
+    add_p2 (p2) {
+        this.p2 = p2;
         this.is_locked = true;
     }
 
@@ -26,11 +28,15 @@ class Room {
     }
 
     get_p1() {
-        return this.id_p1;
+        return this.p1;
     }
 
     get_p2() {
-        return this.id_p2;
+        return this.p2;
+    }
+
+    get_board() {
+        return this.board;
     }
 }
 
