@@ -19,7 +19,7 @@ let players = [];
 
 // connection with web page
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/game.html');
 });
 
 
@@ -29,9 +29,6 @@ app.get('/', (req, res) => {
 server.listen(3000, () => {
   console.log('listening on *:3000');
 });
-
-
-
 
 
 // new connection
