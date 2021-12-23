@@ -42,13 +42,19 @@ class Card {
         }
     }
 
+    static display(tab) {
+        for(var i = 0 ; i < tab.length ; i++) {
+            console.log(tab[i]);
+        }
+    }
+
     static distribute(hand_p1, hand_p2, board) {
         // hand_p1 : Card[]
         // hand_p2 : Card[]
         // board : Card[]
 
-
         var j = 0;
+
         for(var i = 0 ; i < 4 ; i++) {
             this.move_card(Card.stack[j], Card.stack, hand_p1);
             this.move_card(Card.stack[j+1], Card.stack, hand_p1);
@@ -63,24 +69,25 @@ class Card {
         }
     }
 
-    static verif(board) {
+    static need_shake(board) {
         var b = board;
         while(b.length != 0) {
             var cpt = 1;
             var am = b[0].get_month();
             for(var j = 1 ; j < b.length ; j++) {
+
                 if(b[j].get_month() == am) {
                     b.splice(j, 1);
                     j--;
                     cpt++;
                 }
                 if(cpt >= 3) {
-                    return false;
+                    return true;
                 }
             }
             b.splice(0, 1);
         }
-        return true;
+        return false;
     }
 
     static script_cards() {
@@ -92,34 +99,16 @@ class Card {
         new Card('01', 'BB');
 
         // February
-        // new Card('02', '01');
-        // new Card('02', '02');
-        // new Card('02', 'RP');
-        // new Card('02', 'A0');
-
-        // // March
-        // new Card('03', '01');
-        // new Card('03', '02');
-        // new Card('03', 'RP');
-        // new Card('03', 'BC');
-
-
-
-
-        new Card('01', '01');
-        new Card('01', '02');
-        new Card('01', 'RP');
-        new Card('01', 'A0');
+        new Card('02', '01');
+        new Card('02', '02');
+        new Card('02', 'RP');
+        new Card('02', 'A0');
 
         // March
-        new Card('01', '01');
-        new Card('01', '02');
-        new Card('01', 'RP');
-        new Card('01', 'BC');
-
-
-
-
+        new Card('03', '01');
+        new Card('03', '02');
+        new Card('03', 'RP');
+        new Card('03', 'BC');
 
         // April
         new Card('04', '01');
@@ -176,19 +165,30 @@ class Card {
         new Card('12', 'BD');
     }
 
+    static clone(obj) {
+        if (null == obj || "object" != typeof obj) return obj;
+        var copy = obj.constructor();
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+        }
+        return copy;
+    }
+
     static init(hand_p1, hand_p2, board) {
-        Card.script_cards();
-        this.shuffle();
-        Card.distribute(hand_p1, hand_p2, board);
-        console.log(Card.verif(board));
-        // if(!) {
-        //     // hand_p1 = [];
-        //     // hand_p2 = [];
-        //     // board = [];
-        //     console.log("ON REDISTRIBU");
-        //     this.shuffle();
-        //     Card.distribute(hand_p1, hand_p2, board);
-        // }
+        
+        while(1) {
+            hand_p1.length = 0;
+            hand_p2.length = 0;
+            board.length = 0;
+            Card.stack.length = 0;
+            Card.script_cards();
+            this.shuffle();
+
+            Card.distribute(hand_p1, hand_p2, board);
+
+            var b = Card.clone(board);
+            if(!Card.need_shake(b)) break;
+        }
     }
 }
 

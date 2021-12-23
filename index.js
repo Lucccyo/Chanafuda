@@ -66,14 +66,24 @@ io.on('connection', (socket) => {
     var r = p.get_his_room();
     Card.init(r.get_p1().get_hand(), r.get_p2().get_hand(), r.get_board());
 
-    console.log("p1 : ", r.get_p1().get_id())
-    console.log(Player.display_tab(r.get_p1().get_hand()));
+    // pourquoi un undefined a la fin de chaque affichage?  
 
-    console.log("board : ", r.get_id_room())
-    console.log(Player.display_tab(r.get_board()));
+    console.log("p1 : ", r.get_p1().get_id());
+    Player.display_tab(r.get_p1().get_hand());
+
+    console.log("");
+
+    console.log("board : ", r.get_id_room());
+    Player.display_tab(r.get_board());
+
+    // console.log(Player.display_tab(r.get_board()));
+    //avec le console.log, un undefined apparait a la fin du tab. pasque double display ? on essaye de display un \0?
+
+    console.log("")
 
     console.log("p2 : ", r.get_p2().get_id())
-    console.log(Player.display_tab(r.get_p2().get_hand()));
+    Player.display_tab(r.get_p2().get_hand());
+
   }
 
 
