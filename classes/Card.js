@@ -3,10 +3,24 @@ class Card {
     static stack = [];
     month;
     type;
+
     constructor(month, type) {
         this.month = month;
         this.type = type;
         Card.stack.push(this);
+    }
+
+    get_month() {
+        return this.month;
+    }
+
+    static clone(obj) {
+        if (null == obj || "object" != typeof obj) return obj;
+        var copy = obj.constructor();
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+        }
+        return copy;
     }
 
     static shuffle() {
@@ -16,24 +30,6 @@ class Card {
             Card.stack[i] = Card.stack[rand];
             Card.stack[rand] = temp;
         }
-        // console.log("shuffle ended");
-    }
-
-    get_month() {
-        return this.month;
-    }
-
-
-    static move_card(card, start, end) {
-        // card : Card
-        // start : Card[]
-        // end : Card[]
-
-        // delete the card from start stack
-        start.splice(Card.stack.indexOf(card), 1);
-
-        // add the card at the end of end stack
-        end.push(card);
     }
 
     static display_cards() {
@@ -48,10 +44,24 @@ class Card {
         }
     }
 
+    static move_card(card, start, end) {
+        // card : Card
+        // start : Card[]
+        // end : Card[]
+
+        // delete the card from start stack
+        start.splice(Card.stack.indexOf(card), 1);
+
+        // add the card at the end of end stack
+        end.push(card);
+    }
+
     static distribute(hand_p1, hand_p2, board) {
         // hand_p1 : Card[]
         // hand_p2 : Card[]
         // board : Card[]
+
+        //cards are distributed 2 by 2
 
         var j = 0;
 
@@ -70,12 +80,14 @@ class Card {
     }
 
     static need_shake(board) {
+        // need to shuffle again the board if 3 card of one month are at the same time in the board (block the game)
         var b = board;
+
         while(b.length != 0) {
             var cpt = 1;
             var am = b[0].get_month();
-            for(var j = 1 ; j < b.length ; j++) {
 
+            for(var j = 1 ; j < b.length ; j++) {
                 if(b[j].get_month() == am) {
                     b.splice(j, 1);
                     j--;
@@ -165,22 +177,15 @@ class Card {
         new Card('12', 'BD');
     }
 
-    static clone(obj) {
-        if (null == obj || "object" != typeof obj) return obj;
-        var copy = obj.constructor();
-        for (var attr in obj) {
-            if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
-        }
-        return copy;
-    }
-
     static init(hand_p1, hand_p2, board) {
-        
+
+        // shuffle cards and distribution until a playable board
         while(1) {
             hand_p1.length = 0;
             hand_p2.length = 0;
             board.length = 0;
             Card.stack.length = 0;
+
             Card.script_cards();
             this.shuffle();
 

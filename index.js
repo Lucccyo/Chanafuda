@@ -17,7 +17,7 @@ let players = [];
 
 
 
-// init
+// connection with web page
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
@@ -30,8 +30,6 @@ server.listen(3000, () => {
   console.log('listening on *:3000');
 });
 
-const { is } = require("express/lib/request");
-const { init } = require('./classes/Card.js');
 
 
 

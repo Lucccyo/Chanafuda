@@ -41,7 +41,6 @@ class Player {
         } else {
         target_id = his_room.get_p1();
         }
-
         return target_id;
     }
 }
