@@ -35,14 +35,30 @@
         <div class="game">
             <div class="bloc" id="top">
                 <div class="left demi">
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
+                    <div class="carte">
+                        <p id="value"></p>
+                    </div>
+                    <div class="carte">
+                        <p id="value"></p>
+                    </div>
+                    <div class="carte">
+                        <p id="value"></p>
+                    </div>
+                    <div class="carte">
+                        <p id="value"></p>
+                    </div>
+                    <div class="carte">
+                        <p id="value"></p>
+                    </div>
+                    <div class="carte">
+                        <p id="value"></p>
+                    </div>
+                    <div class="carte">
+                        <p id="value"></p>
+                    </div>
+                    <div class="carte">
+                        <p id="value"></p>
+                    </div>
                 </div>
                 <div class="right demi">
                     <div class="carte"></div>
@@ -99,25 +115,27 @@
         
         <script>
             var socket = io();
-          
+            var valCarte = document.getElementById('value');
             // var messages = document.getElementById('messages');
             // var form = document.getElementById('form');
             // var input = document.getElementById('input');
           
-            // form.addEventListener('submit', function(e) {
-            //   e.preventDefault();
-            //   if (input.value) {
-            //     socket.emit('chat message', input.value);
-            //     input.value = '';
-            //   }
-            // });
+            //send
+                // form.addEventListener('submit', function(e) {
+                //   e.preventDefault();
+                //   if (input.value) {
+                //     socket.emit('chat message', input.value);
+                //     input.value = '';
+                //   }
+                // });
           
-            // socket.on('chat message', function(msg) {
+            //receive
+            socket.on('distribution', function(valCard) {
             //   var item = document.createElement('li');
-            //   item.textContent = msg;
+              value.textContent = valCard;
             //   messages.appendChild(item);
             //   window.scrollTo(0, document.body.scrollHeight);
-            // });
+            });
           </script>
     </body>
 </html>

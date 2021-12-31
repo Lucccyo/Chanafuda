@@ -40,13 +40,16 @@ io.on('connection', (socket) => {
   console.log(p.get_id(), ' connected');
 
   // give him a gameroom
-  var begin = false;
+  // var begin = false;
+
   if(room_temp == null) {
     r = new Room(nb_room, p);
     p.go_to_room(r);
     room_temp = r;
     nb_room++;
   } else {
+    mate_id = room_temp.get_p1().get_id();
+    io.to(mate_id).emit('room locked', 'hi');
     begin = true;
     room_temp.add_p2(p);
     p.go_to_room(room_temp);
@@ -56,13 +59,20 @@ io.on('connection', (socket) => {
   // display where he is
   console.log(socket.id, ' on room n° ', p.get_his_room().get_id_room());
 
-  if(begin) {
+  socket.on('disconnect', () => {
+    console.log(socket.id, ' disconnected');
+  });
+});
+
+
+io.on('distribution', (socket) => {
+  console.log('hello');
+  if(p.get_his_room().get_is_locked()) {
     console.log("Distribution...")
     var r = p.get_his_room();
     Card.init(r.get_p1().get_hand(), r.get_p2().get_hand(), r.get_board());
 
-    // pourquoi un undefined a la fin de chaque affichage?  
-
+    // affichage
     console.log("p1 : ", r.get_p1().get_id());
     Player.display_tab(r.get_p1().get_hand());
 
@@ -79,21 +89,11 @@ io.on('connection', (socket) => {
     console.log("p2 : ", r.get_p2().get_id())
     Player.display_tab(r.get_p2().get_hand());
 
+    console.log(p.get_hand()[0].get_name());
+    io.to(socket.id).emit('card reception', p.get_hand()[0].get_name());
+
   }
-
-
-
-
-
-
-
-  socket.on('disconnect', () => {
-    console.log(socket.id, ' disconnected');
-  });
-});
-
-
-
+})
 
 // a socket send a msg, we want this msg appear only on his room
 io.on('connection', (socket) => {

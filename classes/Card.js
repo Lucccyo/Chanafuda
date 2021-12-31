@@ -14,6 +14,10 @@ class Card {
         return this.month;
     }
 
+    get_name() {
+        return this.month.concat('', this.type);
+    }
+
     static clone(obj) {
         if (null == obj || "object" != typeof obj) return obj;
         var copy = obj.constructor();
