@@ -1,5 +1,3 @@
-// const { is } = require("express/lib/request");
-
 class Room {
     NB_MAX = 2;
     p1; 

@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 });
 
 
-/* serveur en ecoute = attente de clients */
+// waiting clients
 server.listen(3000, () => {
   console.log('listening on *:3000');
 });
@@ -31,7 +31,6 @@ server.listen(3000, () => {
 // new connection
 io.on('connection', (socket) => {
 
-  // new player connected
   p = new Player(socket.id);
   players.push(p);
   console.log(p.get_id(), ' connected');
@@ -69,9 +68,7 @@ var start = function (r) {
   // construction du tableau de noms de cartes; plus tard tab de nom d'image
   var p1_hand_name = construct_name_tab(p1.get_hand());
   var p2_hand_name = construct_name_tab(p2.get_hand());
-
   var board_hand_name = construct_name_tab(r.get_board());
-  
 
   io.to(p1.get_id()).emit('perso', p1_hand_name);
   io.to(p1.get_id()).emit('enemy', p2_hand_name);
@@ -97,7 +94,7 @@ var distribution = function (r) {
 
   Card.init(r.get_p1().get_hand(), r.get_p2().get_hand(), r.get_board());
 
-  // affichage
+  // affichage term
   console.log("p1 : ", r.get_p1().get_id());
   Player.display_tab(r.get_p1().get_hand());
 
@@ -125,15 +122,6 @@ io.on('connection', (socket) => {
         sender = players[i];
       }
     }
-
-    // let his_room = sender.get_his_room();
-
-    // if(sender.get_id() == his_room.get_p1()) {
-    //   target_id = his_room.get_p2();
-    // } else {
-    //   target_id = his_room.get_p1();
-    // }
-
     target_id = sender.get_his_mate_id();
 
     // the msg is displayed on the room

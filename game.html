@@ -1,205 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <style>
+      body {
+        background-color: rgb(230, 222, 212);
+        margin: 0;
+      }
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- <link rel="stylesheet" href="style/style.css"> -->
-  <style>
-    body {
-      background-color: rgb(230, 222, 212);
-      margin: 0;
-    }
+      .game {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 100vw;
+      }
 
-    .game {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      width: 100vw;
-    }
+      .bloc {
+        height: 33.333%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+      }
 
-    .bloc {
-      height: 33.333%;
-      width: 100%;
-      display: flex;
-      align-items: center;
-    }
+      .carte {
+        height: 100px;
+        width: 70px;
+        margin: 5px;
+      }
 
-    .carte {
-      height: 100px;
-      width: 70px;
-      margin: 5px;
-    }
+      .main {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+      }
 
-    .main {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-    }
+      .demi {
+        display: flex;
+        height: 100%;
+        width: 50%;
+        align-items: center;
+      }
 
-    .demi {
-      display: flex;
-      height: 100%;
-      width: 50%;
-      align-items: center;
-    }
+      .right .carte {
+        background-color: rgb(233, 210, 182);
+      }
 
-    .right .carte {
-      background-color: rgb(233, 210, 182);
-    }
+      #mid .board {
+        display: flex;
+        flex-direction: column;
+        margin-left: 30vw;
+      }
 
-    #mid .board {
-      display: flex;
-      flex-direction: column;
-      margin-left: 30vw;
-    }
+      #mid .board .rangee {
+        display: flex;
+      }
 
-    #mid .board .rangee {
-      display: flex;
-    }
+      .tas {
+        background-color: rgb(71, 60, 44);
+      }
 
-    .tas {
-      background-color: rgb(71, 60, 44);
-    }
+      button {
+        width: 100%;
+        height: 100%;
+        background-color: rgb(136, 113, 82);
+      }
+
+      /* #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+          #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+          #input:focus { outline: none; }
+          #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
     
-    button {
-      width: 100%;
-      height: 100%;
-      background-color: rgb(136, 113, 82);
-    }
+          #messages { list-style-type: none; margin: 0; padding: 0; }
+          #messages > li { padding: 0.5rem 1rem; }
+          #messages > li:nth-child(odd) { background: #efefef; } */
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Hanafuda</title>
+  </head>
 
-    /* #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-        #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
-        #input:focus { outline: none; }
-        #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
-  
-        #messages { list-style-type: none; margin: 0; padding: 0; }
-        #messages > li { padding: 0.5rem 1rem; }
-        #messages > li:nth-child(odd) { background: #efefef; } */
-  </style>
-  <script src="/socket.io/socket.io.js"></script>
-  <title>Hanafuda</title>
-</head>
+  <body>
+    <div class="game">
+      <div class="bloc" id="top">
+        <div class="left demi" id="enemy">
 
-<body>
-  <div class="game">
-    <div class="bloc" id="top">
-      <div class="left demi" id="enemy">
-        <!-- <div class="carte">
-          <p id="value"></p>
         </div>
-        <div class="carte">
-          <p id="value"></p>
+        <div class="right demi">
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
         </div>
-        <div class="carte">
-          <p id="value"></p>
-        </div>
-        <div class="carte">
-          <p id="value"></p>
-        </div>
-        <div class="carte">
-          <p id="value"></p>
-        </div>
-        <div class="carte">
-          <p id="value"></p>
-        </div>
-        <div class="carte">
-          <p id="value"></p>
-        </div>
-        <div class="carte">
-          <p id="value"></p>
-        </div> -->
       </div>
-      <div class="right demi">
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
+      <div class="bloc" id="mid">
+        <div class="carte tas"></div>
+        <div class="board">
+          <div class="top rangee" id="board_top">
+
+          </div>
+          <div class="bot rangee" id="board_bot">
+
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="bloc" id="mid">
-      <div class="carte tas"></div>
-      <div class="board">
-        <div class="top rangee" id="board_top">
+      <div class="bloc" id="bot">
+        <div class="left demi" id="perso">
 
         </div>
-        <div class="bot rangee" id="board_bot">
-
+        <div class="right demi">
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
         </div>
       </div>
     </div>
-    <div class="bloc" id="bot">
-      <div class="left demi" id="perso">
-
-      </div>
-      <div class="right demi">
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-      </div>
-    </div>
-  </div>
 
 
-  <script>
-    var socket = io();
-    var enemy_stack = document.getElementById('enemy');
-    var perso_stack = document.getElementById('perso');
-    var board_top = document.getElementById('board_top');
-    var board_bot = document.getElementById('board_bot');
+    <script>
+      var socket = io();
+      var enemy_stack = document.getElementById('enemy');
+      var perso_stack = document.getElementById('perso');
+      var board_top = document.getElementById('board_top');
+      var board_bot = document.getElementById('board_bot');
 
-    // var valCarte = document.getElementById('value');
-
-    // var btn = document.getElementById('btnSocketIO');
-    // btn.addEventListener("click", test);
-
-    // var champ1 = "pomme";
-
-    // var test = function() {
-    //     socket.emit('event', champ1);
-    //     socket.on('ack', (data) => {
-    //         console.log("ack reçu");
-    //     });
-    // };
-    // socket.on('chat', function(msg) {
-    //   valCarte.innerText = msg;
-    // });
-    // while (!ready) {
       socket.on('perso', function (tab) {
-        for(let i = 0 ; i < tab.length ; i++) {
+        for (let i = 0; i < tab.length; i++) {
           add_card(tab[i], perso_stack);
         }
-        // valCarte.innerText = tab[0];
       });
 
       socket.on('enemy', function (tab) {
-        for(let i = 0 ; i < tab.length ; i++) {
+        for (let i = 0; i < tab.length; i++) {
           add_card(tab[i], enemy_stack);
         }
-        // valCarte.innerText = tab[0];
       });
 
       socket.on('board', function (tab) {
-        for(let i = 0 ; i < tab.length ; i++) {
-          if(i%2 == 0) {
+        for (let i = 0; i < tab.length; i++) {
+          if (i % 2 == 0) {
             add_card(tab[i], board_top);
           } else {
             add_card(tab[i], board_bot);
           }
         }
-        // valCarte.innerText = tab[0];
       });
-
 
       function add_card(nom, stack) {
         var div = document.createElement("div");
@@ -210,44 +165,7 @@
 
         stack.append(div);
       }
-    // }
-
-
-    // valCarte.innerText = "dze";
-
-
-        // var messages = document.getElementById('messages');
-        // var form = document.getElementById('form');
-        // var input = document.getElementById('input');
-
-        //send
-        // form.addEventListener('submit', function(e) {
-        //   e.preventDefault();
-        //   if (input.value) {
-        //     socket.emit('chat message', input.value);
-        //     input.value = '';
-        //   }
-        // });
-
-        //receive
-        // socket.on('chat message', function (msg) {
-        //     // var item = document.createElement('li');
-        //     // item.textContent = msg;
-        //     // messages.appendChild(item);
-        //     // window.scrollTo(0, document.body.scrollHeight);
-        //     msg = "hello";
-        //     valCarte.textContent = msg;
-        // });
-
-
-
-        // socket.on('chat', function (valCard) {
-        //     //   var item = document.createElement('li');
-        //     value.textContent = valCard;
-        //     //   messages.appendChild(item);
-        //     //   window.scrollTo(0, document.body.scrollHeight);
-        // });
-  </script>
-</body>
+    </script>
+  </body>
 
 </html>
