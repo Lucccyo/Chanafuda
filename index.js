@@ -7,6 +7,7 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+const { distribute } = require('./classes/Card.js');
 const io = new Server(server);
 
 
@@ -29,12 +30,6 @@ server.listen(3000, () => {
 
 // new connection
 io.on('connection', (socket) => {
-  console.log("connected");
-  // socket.on('event', (data) => {
-  //   console.log("data == ");
-  //   console.log(data);
-  //   socket.emit('ack');
-  // });
 
   // new player connected
   p = new Player(socket.id);
@@ -42,8 +37,6 @@ io.on('connection', (socket) => {
   console.log(p.get_id(), ' connected');
 
   // give him a gameroom
-  // var begin = false;
-
   if(room_temp == null) {
     r = new Room(nb_room, p);
     p.go_to_room(r);
@@ -52,20 +45,13 @@ io.on('connection', (socket) => {
   } else {
     room_temp.add_p2(p);
     p.go_to_room(room_temp);
-    var mate_id = p.get_his_mate_id();
+    //game starts
+    start(room_temp);
     room_temp = null;
-    // socket.emit('ready', "ready");
-    console.log(mate_id);
-
-    io.to(mate_id).emit('ready', "readyymate");
-    io.to(socket.id).emit('ready', "readyy2");
-
   }
 
   // display where he is
   console.log(socket.id, ' on room n° ', p.get_his_room().get_id_room());
-
-            // socket.emit('chat', "hi");
   
   socket.on('disconnect', () => {
     console.log(socket.id, ' disconnected');
@@ -74,50 +60,43 @@ io.on('connection', (socket) => {
 });
 
 
-// io.on('connection', (socket) => {
-  
+var start = function (r) {
+  p1 = r.get_p1();
+  p2 = r.get_p2();
 
-  // socket.on('distribution', (msg) => {
+  distribution(r);
 
-  // });
-
-
-
+  var name_hand_p1;
 
 
 
-  // console.log('hello');
-  // if(p.get_his_room().get_is_locked()) {
-  //   console.log("Distribution...")
-  //   var r = p.get_his_room();
-  //   Card.init(r.get_p1().get_hand(), r.get_p2().get_hand(), r.get_board());
-
-  //   // affichage
-  //   console.log("p1 : ", r.get_p1().get_id());
-  //   Player.display_tab(r.get_p1().get_hand());
-
-  //   console.log("");
-
-  //   console.log("board : ", r.get_id_room());
-  //   Player.display_tab(r.get_board());
-
-  //   // console.log(Player.display_tab(r.get_board()));
-  //   //avec le console.log, un undefined apparait a la fin du tab. pasque double display ? on essaye de display un \0?
-
-  //   console.log("")
-
-  //   console.log("p2 : ", r.get_p2().get_id())
-  //   Player.display_tab(r.get_p2().get_hand());
-
-  //   console.log(p.get_hand()[0].get_name());
-  //   io.to(socket.id).emit('card reception', p.get_hand()[0].get_name());
-
-  // }
-// })
+  io.to(p1.get_id()).emit('ready', p1.get_hand()[0].get_name_show());
+  io.to(p2.get_id()).emit('ready', p2.get_hand()[0].get_name_show());
+}
 
 
+var distribution = function (r) {
+  console.log("Distribution...")
 
+  Card.init(r.get_p1().get_hand(), r.get_p2().get_hand(), r.get_board());
 
+  // affichage
+  console.log("p1 : ", r.get_p1().get_id());
+  Player.display_tab(r.get_p1().get_hand());
+
+  console.log("");
+
+  console.log("board : ", r.get_id_room());
+  Player.display_tab(r.get_board());
+
+  // console.log(Player.display_tab(r.get_board()));
+  //avec le console.log, un undefined apparait a la fin du tab. pasque double display ? on essaye de display un \0?
+
+  console.log("")
+
+  console.log("p2 : ", r.get_p2().get_id())
+  Player.display_tab(r.get_p2().get_hand());
+}
 
 // a socket send a msg, we want this msg appear only on his room
 io.on('connection', (socket) => {

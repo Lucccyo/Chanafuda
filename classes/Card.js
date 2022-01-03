@@ -14,8 +14,12 @@ class Card {
         return this.month;
     }
 
-    get_name() {
+    get_name_show() {
         return this.month.concat('', this.type);
+    }
+
+    get_name_hidden() {
+        return ("----");
     }
 
     static clone(obj) {
@@ -70,14 +74,14 @@ class Card {
         var j = 0;
 
         for(var i = 0 ; i < 4 ; i++) {
-            this.move_card(Card.stack[j], Card.stack, hand_p1);
-            this.move_card(Card.stack[j+1], Card.stack, hand_p1);
+            Card.move_card(Card.stack[j], Card.stack, hand_p1);
+            Card.move_card(Card.stack[j+1], Card.stack, hand_p1);
 
-            this.move_card(Card.stack[j+2], Card.stack, board);
-            this.move_card(Card.stack[j+3], Card.stack, board);
+            Card.move_card(Card.stack[j+2], Card.stack, board);
+            Card.move_card(Card.stack[j+3], Card.stack, board);
 
-            this.move_card(Card.stack[j+4], Card.stack, hand_p2);
-            this.move_card(Card.stack[j+5], Card.stack, hand_p2);
+            Card.move_card(Card.stack[j+4], Card.stack, hand_p2);
+            Card.move_card(Card.stack[j+5], Card.stack, hand_p2);
 
             j+=6;
         }
