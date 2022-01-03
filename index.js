@@ -69,6 +69,8 @@ var start = function (r) {
   // construction du tableau de noms de cartes; plus tard tab de nom d'image
   var p1_hand_name = construct_name_tab(p1.get_hand());
   var p2_hand_name = construct_name_tab(p2.get_hand());
+
+  var board_hand_name = construct_name_tab(r.get_board());
   
 
   io.to(p1.get_id()).emit('perso', p1_hand_name);
@@ -76,6 +78,9 @@ var start = function (r) {
 
   io.to(p2.get_id()).emit('perso', p2_hand_name);
   io.to(p2.get_id()).emit('enemy', p1_hand_name);
+
+  io.to(p1.get_id()).emit('board', board_hand_name);
+  io.to(p2.get_id()).emit('board', board_hand_name);
 }
 
 function construct_name_tab(card_tab) {

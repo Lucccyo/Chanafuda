@@ -29,7 +29,6 @@
     .carte {
       height: 100px;
       width: 70px;
-      background-color: rgb(136, 113, 82);
       margin: 5px;
     }
 
@@ -47,7 +46,7 @@
     }
 
     .right .carte {
-      background-color: burlywood;
+      background-color: rgb(233, 210, 182);
     }
 
     #mid .board {
@@ -62,6 +61,12 @@
 
     .tas {
       background-color: rgb(71, 60, 44);
+    }
+    
+    button {
+      width: 100%;
+      height: 100%;
+      background-color: rgb(136, 113, 82);
     }
 
     /* #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
@@ -120,17 +125,11 @@
     <div class="bloc" id="mid">
       <div class="carte tas"></div>
       <div class="board">
-        <div class="top rangee">
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
+        <div class="top rangee" id="board_top">
+
         </div>
-        <div class="bot rangee">
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
+        <div class="bot rangee" id="board_bot">
+
         </div>
       </div>
     </div>
@@ -156,6 +155,9 @@
     var socket = io();
     var enemy_stack = document.getElementById('enemy');
     var perso_stack = document.getElementById('perso');
+    var board_top = document.getElementById('board_top');
+    var board_bot = document.getElementById('board_bot');
+
     // var valCarte = document.getElementById('value');
 
     // var btn = document.getElementById('btnSocketIO');
@@ -187,18 +189,22 @@
         // valCarte.innerText = tab[0];
       });
 
-      
-
-
-
-
-
+      socket.on('board', function (tab) {
+        for(let i = 0 ; i < tab.length ; i++) {
+          if(i%2 == 0) {
+            add_card(tab[i], board_top);
+          } else {
+            add_card(tab[i], board_bot);
+          }
+        }
+        // valCarte.innerText = tab[0];
+      });
 
 
       function add_card(nom, stack) {
         var div = document.createElement("div");
         div.classList.add('carte');
-        var p = document.createElement("p");
+        var p = document.createElement("button");
         p.innerText = nom;
         div.appendChild(p);
 
