@@ -1,25 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="style/style.css"> -->
-    <style>
-        body {background-color: rgb(230, 222, 212); margin: 0;}
-        .game {display: flex; flex-direction: column; height: 100vh; width: 100vw;}
-        .bloc {height: 33.333%; width: 100%; display: flex; align-items: center;}
-        .carte {height: 100px; width: 70px; background-color: rgb(136, 113, 82); margin: 5px;}
-        .main {display: flex; flex-direction: row; width: 100%;}
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <link rel="stylesheet" href="style/style.css"> -->
+  <style>
+    body {
+      background-color: rgb(230, 222, 212);
+      margin: 0;
+    }
 
-        .demi {display: flex; height: 100%; width: 50%; align-items: center;}
-        .right .carte {background-color: burlywood;}
+    .game {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+    }
 
-        #mid .board {display: flex; flex-direction: column; margin-left: 30vw;}
-        #mid .board .rangee {display: flex;}
-        .tas {background-color: rgb(71, 60, 44);}
-        
-        /* #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+    .bloc {
+      height: 33.333%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .carte {
+      height: 100px;
+      width: 70px;
+      background-color: rgb(136, 113, 82);
+      margin: 5px;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+    }
+
+    .demi {
+      display: flex;
+      height: 100%;
+      width: 50%;
+      align-items: center;
+    }
+
+    .right .carte {
+      background-color: burlywood;
+    }
+
+    #mid .board {
+      display: flex;
+      flex-direction: column;
+      margin-left: 30vw;
+    }
+
+    #mid .board .rangee {
+      display: flex;
+    }
+
+    .tas {
+      background-color: rgb(71, 60, 44);
+    }
+
+    /* #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
         #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
         #input:focus { outline: none; }
         #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
@@ -27,115 +72,153 @@
         #messages { list-style-type: none; margin: 0; padding: 0; }
         #messages > li { padding: 0.5rem 1rem; }
         #messages > li:nth-child(odd) { background: #efefef; } */
-      </style>
-    <script src="/socket.io/socket.io.js"></script>
-    <title>Hanafuda</title>
+  </style>
+  <script src="/socket.io/socket.io.js"></script>
+  <title>Hanafuda</title>
 </head>
-    <body>
-        <div class="game">
-            <div class="bloc" id="top">
-                <div class="left demi">
-                    <div class="carte">
-                        <p id="value"></p>
-                    </div>
-                    <div class="carte">
-                        <p id="value"></p>
-                    </div>
-                    <div class="carte">
-                        <p id="value"></p>
-                    </div>
-                    <div class="carte">
-                        <p id="value"></p>
-                    </div>
-                    <div class="carte">
-                        <p id="value"></p>
-                    </div>
-                    <div class="carte">
-                        <p id="value"></p>
-                    </div>
-                    <div class="carte">
-                        <p id="value"></p>
-                    </div>
-                    <div class="carte">
-                        <p id="value"></p>
-                    </div>
-                </div>
-                <div class="right demi">
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                </div>
-            </div>
-            <div class="bloc" id="mid">
-                <div class="carte tas"></div>
-                <div class="board">
-                    <div class="top rangee">
-                        <div class="carte"></div>
-                        <div class="carte"></div>
-                        <div class="carte"></div>
-                        <div class="carte"></div>
-                    </div>
-                    <div class="bot rangee">
-                        <div class="carte"></div>
-                        <div class="carte"></div>
-                        <div class="carte"></div>
-                        <div class="carte"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="bloc" id="bot">
-                <div class="left demi">
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                </div>
-                <div class="right demi">
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                    <div class="carte"></div>
-                </div>
-            </div>
+
+<body>
+  <div class="game">
+    <div class="bloc" id="top">
+      <div class="left demi">
+        <div class="carte">
+          <p id="value"></p>
         </div>
-        
-        
-        <script>
-            var socket = io();
-            var valCarte = document.getElementById('value');
-            // var messages = document.getElementById('messages');
-            // var form = document.getElementById('form');
-            // var input = document.getElementById('input');
-          
-            //send
-                // form.addEventListener('submit', function(e) {
-                //   e.preventDefault();
-                //   if (input.value) {
-                //     socket.emit('chat message', input.value);
-                //     input.value = '';
-                //   }
-                // });
-          
-            //receive
-            socket.on('distribution', function(valCard) {
-            //   var item = document.createElement('li');
-              value.textContent = valCard;
-            //   messages.appendChild(item);
-            //   window.scrollTo(0, document.body.scrollHeight);
-            });
-          </script>
-    </body>
+        <div class="carte">
+          <p id="value"></p>
+        </div>
+        <div class="carte">
+          <p id="value"></p>
+        </div>
+        <div class="carte">
+          <p id="value"></p>
+        </div>
+        <div class="carte">
+          <p id="value"></p>
+        </div>
+        <div class="carte">
+          <p id="value"></p>
+        </div>
+        <div class="carte">
+          <p id="value"></p>
+        </div>
+        <div class="carte">
+          <p id="value"></p>
+        </div>
+      </div>
+      <div class="right demi">
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+      </div>
+    </div>
+    <div class="bloc" id="mid">
+      <div class="carte tas"></div>
+      <div class="board">
+        <div class="top rangee">
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+        </div>
+        <div class="bot rangee">
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+          <div class="carte"></div>
+        </div>
+      </div>
+    </div>
+    <div class="bloc" id="bot">
+      <div class="left demi">
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+      </div>
+      <div class="right demi">
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    var socket = io();
+    var valCarte = document.getElementById('value');
+
+    // var btn = document.getElementById('btnSocketIO');
+    // btn.addEventListener("click", test);
+
+    // var champ1 = "pomme";
+
+    // var test = function() {
+    //     socket.emit('event', champ1);
+    //     socket.on('ack', (data) => {
+    //         console.log("ack reçu");
+    //     });
+    // };
+    // socket.on('chat', function(msg) {
+    //   valCarte.innerText = msg;
+    // });
+    // while (!ready) {
+      socket.on('ready', function (msg) {
+        valCarte.innerText = msg;
+      });
+    // }
+
+
+    // valCarte.innerText = "dze";
+
+
+        // var messages = document.getElementById('messages');
+        // var form = document.getElementById('form');
+        // var input = document.getElementById('input');
+
+        //send
+        // form.addEventListener('submit', function(e) {
+        //   e.preventDefault();
+        //   if (input.value) {
+        //     socket.emit('chat message', input.value);
+        //     input.value = '';
+        //   }
+        // });
+
+        //receive
+        // socket.on('chat message', function (msg) {
+        //     // var item = document.createElement('li');
+        //     // item.textContent = msg;
+        //     // messages.appendChild(item);
+        //     // window.scrollTo(0, document.body.scrollHeight);
+        //     msg = "hello";
+        //     valCarte.textContent = msg;
+        // });
+
+
+
+        // socket.on('chat', function (valCard) {
+        //     //   var item = document.createElement('li');
+        //     value.textContent = valCard;
+        //     //   messages.appendChild(item);
+        //     //   window.scrollTo(0, document.body.scrollHeight);
+        // });
+  </script>
+</body>
+
 </html>

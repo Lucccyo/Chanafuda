@@ -36,12 +36,19 @@ class Player {
 
     get_his_mate_id() {
         let his_room = this.get_his_room();
-        if(this.get_id() == his_room.get_p1()) {
-        target_id = his_room.get_p2();
+        let target_id;
+        if(this.get_his_room()) {
+            
+            if(this.get_id() == his_room.get_p1().get_id()) {
+            target_id = his_room.get_p2().get_id();
+            } else {
+            target_id = his_room.get_p1().get_id();
+            }
+            return target_id;
         } else {
-        target_id = his_room.get_p1();
+            return 0;
         }
-        return target_id;
+        
     }
 }
 
