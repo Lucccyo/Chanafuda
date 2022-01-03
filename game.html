@@ -80,8 +80,8 @@
 <body>
   <div class="game">
     <div class="bloc" id="top">
-      <div class="left demi">
-        <div class="carte">
+      <div class="left demi" id="enemy">
+        <!-- <div class="carte">
           <p id="value"></p>
         </div>
         <div class="carte">
@@ -104,7 +104,7 @@
         </div>
         <div class="carte">
           <p id="value"></p>
-        </div>
+        </div> -->
       </div>
       <div class="right demi">
         <div class="carte"></div>
@@ -135,15 +135,8 @@
       </div>
     </div>
     <div class="bloc" id="bot">
-      <div class="left demi">
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
+      <div class="left demi" id="perso">
+
       </div>
       <div class="right demi">
         <div class="carte"></div>
@@ -161,7 +154,9 @@
 
   <script>
     var socket = io();
-    var valCarte = document.getElementById('value');
+    var enemy_stack = document.getElementById('enemy');
+    var perso_stack = document.getElementById('perso');
+    // var valCarte = document.getElementById('value');
 
     // var btn = document.getElementById('btnSocketIO');
     // btn.addEventListener("click", test);
@@ -178,9 +173,37 @@
     //   valCarte.innerText = msg;
     // });
     // while (!ready) {
-      socket.on('ready', function (msg) {
-        valCarte.innerText = msg;
+      socket.on('perso', function (tab) {
+        for(let i = 0 ; i < tab.length ; i++) {
+          add_card(tab[i], perso_stack);
+        }
+        // valCarte.innerText = tab[0];
       });
+
+      socket.on('enemy', function (tab) {
+        for(let i = 0 ; i < tab.length ; i++) {
+          add_card(tab[i], enemy_stack);
+        }
+        // valCarte.innerText = tab[0];
+      });
+
+      
+
+
+
+
+
+
+
+      function add_card(nom, stack) {
+        var div = document.createElement("div");
+        div.classList.add('carte');
+        var p = document.createElement("p");
+        p.innerText = nom;
+        div.appendChild(p);
+
+        stack.append(div);
+      }
     // }
 
 

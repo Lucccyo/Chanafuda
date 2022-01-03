@@ -66,12 +66,24 @@ var start = function (r) {
 
   distribution(r);
 
-  var name_hand_p1;
+  // construction du tableau de noms de cartes; plus tard tab de nom d'image
+  var p1_hand_name = construct_name_tab(p1.get_hand());
+  var p2_hand_name = construct_name_tab(p2.get_hand());
+  
 
+  io.to(p1.get_id()).emit('perso', p1_hand_name);
+  io.to(p1.get_id()).emit('enemy', p2_hand_name);
 
+  io.to(p2.get_id()).emit('perso', p2_hand_name);
+  io.to(p2.get_id()).emit('enemy', p1_hand_name);
+}
 
-  io.to(p1.get_id()).emit('ready', p1.get_hand()[0].get_name_show());
-  io.to(p2.get_id()).emit('ready', p2.get_hand()[0].get_name_show());
+function construct_name_tab(card_tab) {
+  var tab_name = [];
+  for(var i = 0 ; i <card_tab.length ; i++) {
+    tab_name.push(card_tab[i].get_name_show());
+  }
+  return tab_name;
 }
 
 
