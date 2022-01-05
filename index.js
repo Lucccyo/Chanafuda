@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
 
   // give him a gameroom
   if(room_temp == null) {
-    personal_stack = Array.from(public_stack);
+    personal_stack = Array.from(public_stack);    //création copie du tableau trié de carte pour cette room
     r = new Room(nb_room, p, personal_stack);
     p.go_to_room(r);
     room_temp = r;
@@ -99,7 +99,7 @@ function construct_name_tab(card_tab) {
 var distribution = function (r) {
   console.log("Distribution...")
 
-  Card.init(r.get_p1().get_hand(), r.get_p2().get_hand(), r.get_board());
+  Card.init(r);
 
   // affichage term
   console.log("p1 : ", r.get_p1().get_id());
