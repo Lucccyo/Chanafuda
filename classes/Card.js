@@ -4,10 +4,10 @@ class Card {
     month;
     type;
 
-    constructor(month, type) {
+    constructor(month, type, public_stack) {
         this.month = month;
         this.type = type;
-        Card.stack.push(this);
+        public_stack.push(this);
     }
 
     get_month() {
@@ -110,79 +110,79 @@ class Card {
         return false;
     }
 
-    static script_cards() {
+    static script_cards(public_stack) {
 
         // January
-        new Card('01', '01');
-        new Card('01', '02');
-        new Card('01', 'RP');
-        new Card('01', 'BB');
+        new Card('01', '01', public_stack);
+        new Card('01', '02', public_stack);
+        new Card('01', 'RP', public_stack);
+        new Card('01', 'BB', public_stack);
 
-        // February
-        new Card('02', '01');
-        new Card('02', '02');
-        new Card('02', 'RP');
-        new Card('02', 'A0');
+        // February, public_stack
+        new Card('02', '01', public_stack);
+        new Card('02', '02', public_stack);
+        new Card('02', 'RP', public_stack);
+        new Card('02', 'A0', public_stack);
 
-        // March
-        new Card('03', '01');
-        new Card('03', '02');
-        new Card('03', 'RP');
-        new Card('03', 'BC');
+        // March, public_stack
+        new Card('03', '01', public_stack);
+        new Card('03', '02', public_stack);
+        new Card('03', 'RP', public_stack);
+        new Card('03', 'BC', public_stack);
 
-        // April
-        new Card('04', '01');
-        new Card('04', '02');
-        new Card('04', 'RR');
-        new Card('04', 'A0');
+        // April, public_stack
+        new Card('04', '01', public_stack);
+        new Card('04', '02', public_stack);
+        new Card('04', 'RR', public_stack);
+        new Card('04', 'A0', public_stack);
 
-        // May
-        new Card('05', '01');
-        new Card('05', '02');
-        new Card('05', 'RR');
-        new Card('05', 'A0');
+        // May, public_stack
+        new Card('05', '01', public_stack);
+        new Card('05', '02', public_stack);
+        new Card('05', 'RR', public_stack);
+        new Card('05', 'A0', public_stack);
 
-        // June
-        new Card('06', '01');
-        new Card('06', '02');
-        new Card('06', 'RV');
-        new Card('06', 'AC');
+        // June, public_stack
+        new Card('06', '01', public_stack);
+        new Card('06', '02', public_stack);
+        new Card('06', 'RV', public_stack);
+        new Card('06', 'AC', public_stack);
 
-        // July
-        new Card('07', '01');
-        new Card('07', '02');
-        new Card('07', 'RR');
-        new Card('07', 'AI');
+        // July, public_stack
+        new Card('07', '01', public_stack);
+        new Card('07', '02', public_stack);
+        new Card('07', 'RR', public_stack);
+        new Card('07', 'AI', public_stack);
 
-        // August
-        new Card('08', '01');
-        new Card('08', '02');
-        new Card('08', 'A0');
-        new Card('08', 'BM');
+        // August, public_stack
+        new Card('08', '01', public_stack);
+        new Card('08', '02', public_stack);
+        new Card('08', 'A0', public_stack);
+        new Card('08', 'BM', public_stack);
 
-        // September
-        new Card('09', '01');
-        new Card('09', '02');
-        new Card('09', 'RV');
-        new Card('09', 'AW');
+        // September, public_stack
+        new Card('09', '01', public_stack);
+        new Card('09', '02', public_stack);
+        new Card('09', 'RV', public_stack);
+        new Card('09', 'AW', public_stack);
 
-        // October
-        new Card('10', '01');
-        new Card('10', '02');
-        new Card('10', 'RV');
-        new Card('10', 'AS');
+        // October, public_stack
+        new Card('10', '01', public_stack);
+        new Card('10', '02', public_stack);
+        new Card('10', 'RV', public_stack);
+        new Card('10', 'AS', public_stack);
 
-        // November
-        new Card('11', '01');
-        new Card('11', 'RR');
-        new Card('11', 'A0');
-        new Card('11', 'BR');
+        // November, public_stack
+        new Card('11', '01', public_stack);
+        new Card('11', 'RR', public_stack);
+        new Card('11', 'A0', public_stack);
+        new Card('11', 'BR', public_stack);
 
-        // December
-        new Card('12', '01');
-        new Card('12', '02');
-        new Card('12', '03');
-        new Card('12', 'BD');
+        // December, public_stack
+        new Card('12', '01', public_stack);
+        new Card('12', '02', public_stack);
+        new Card('12', '03', public_stack);
+        new Card('12', 'BD', public_stack);
     }
 
     static init(hand_p1, hand_p2, board) {

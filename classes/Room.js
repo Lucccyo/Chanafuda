@@ -1,14 +1,16 @@
 class Room {
     NB_MAX = 2;
+    stack;
     p1; 
     p2;
     name;
     is_locked = false;
     board;
     
-    constructor(name, p1) {
+    constructor(name, p1, stack) {
         this.p1 = p1;
         this.name = name;
+        this.stack = stack;
         this.board = new Array();
     }
 
@@ -35,6 +37,10 @@ class Room {
 
     get_board() {
         return this.board;
+    }
+
+    get_stack() {
+        return this.stack;
     }
 }
 

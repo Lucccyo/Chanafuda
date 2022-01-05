@@ -25,6 +25,12 @@ app.get('/', (req, res) => {
 // waiting clients
 server.listen(3000, () => {
   console.log('listening on *:3000');
+  var public_stack = new Array;
+  Card.script_cards(public_stack);
+  // Player.display_tab(public_stack);
+  // Object.freeze(public_stack);
+  // public_stack = 'k';
+  // console.log(public_stack);
 });
 
 
@@ -37,7 +43,8 @@ io.on('connection', (socket) => {
 
   // give him a gameroom
   if(room_temp == null) {
-    r = new Room(nb_room, p);
+    personal_stack = Array.from(public_stack);
+    r = new Room(nb_room, p, personal_stack);
     p.go_to_room(r);
     room_temp = r;
     nb_room++;
