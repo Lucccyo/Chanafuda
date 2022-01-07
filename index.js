@@ -21,16 +21,15 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/game.html');
 });
 
-
 // waiting clients
+var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
-  var public_stack = new Array;
   Card.script_cards(public_stack);
   // Player.display_tab(public_stack);
   // Object.freeze(public_stack);
   // public_stack = 'k';
-  // console.log(public_stack);
+  // console.log(public_stack);s
 });
 
 
@@ -86,6 +85,7 @@ var start = function (r) {
   io.to(p1.get_id()).emit('board', board_hand_name);
   io.to(p2.get_id()).emit('board', board_hand_name);
 }
+
 
 function construct_name_tab(card_tab) {
   var tab_name = [];

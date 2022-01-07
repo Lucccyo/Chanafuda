@@ -1,16 +1,16 @@
 class Room {
     NB_MAX = 2;
-    stack;
+    sort_stack;
     p1; 
     p2;
     name;
     is_locked = false;
     board;
     
-    constructor(name, p1, stack) {
+    constructor(name, p1, perso_stack) {
         this.p1 = p1;
         this.name = name;
-        this.stack = stack;
+        this.sort_stack = perso_stack;
         this.board = new Array();
     }
 
@@ -39,9 +39,11 @@ class Room {
         return this.board;
     }
 
-    get_stack() {
-        return this.stack;
+    get_sort_stack() {
+        return this.sort_stack;
     }
+
+
 }
 
 module.exports = Room
