@@ -26,10 +26,6 @@ var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
   Card.script_cards(public_stack);
-  // Player.display_tab(public_stack);
-  // Object.freeze(public_stack);
-  // public_stack = 'k';
-  // console.log(public_stack);s
 });
 
 
@@ -61,7 +57,6 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log(socket.id, ' disconnected');
   });
-
 });
 
 
@@ -99,9 +94,8 @@ function construct_name_tab(card_tab) {
 var distribution = function (r) {
   console.log("Distribution...")
 
-  Card.init(r);
+  r.set_stack(Card.init(r));
 
-  // affichage term
   console.log("p1 : ", r.get_p1().get_id());
   Player.display_tab(r.get_p1().get_hand());
 
@@ -109,9 +103,6 @@ var distribution = function (r) {
 
   console.log("board : ", r.get_id_room());
   Player.display_tab(r.get_board());
-
-  // console.log(Player.display_tab(r.get_board()));
-  //avec le console.log, un undefined apparait a la fin du tab. pasque double display ? on essaye de display un \0?
 
   console.log("")
 

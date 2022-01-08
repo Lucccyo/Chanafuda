@@ -83,31 +83,10 @@ class Card {
   }
 
   static need_shake(board) {
-    // console.log('boucle');
+
     let m = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-    // for(let i = 0 ; i < board.length ; i++) {
-    // console.log('for');
-
-    //   switch (board[i].get_month()) {
-    //     case '01' : m[0]++; if(m[0] >= 3)   Card.display(board);  return true; break;
-    //     case '02' : m[1]++; if(m[1] >= 3)   Card.display(board);  return true; break;
-    //     case '03' : m[2]++; if(m[2] >= 3)   Card.display(board);  return true; break;
-    //     case '04' : m[3]++; if(m[3] >= 3)   Card.display(board);  return true; break;
-    //     case '05' : m[4]++; if(m[4] >= 3)   Card.display(board);  return true; break;
-    //     case '06' : m[5]++; if(m[5] >= 3)   Card.display(board);  return true; break;
-    //     case '07' : m[6]++; if(m[6] >= 3)   Card.display(board);  return true; break;
-    //     case '08' : m[7]++; if(m[7] >= 3)   Card.display(board);  return true; break;
-    //     case '09' : m[8]++; if(m[8] >= 3)   Card.display(board);  return true; break;
-    //     case '10' : m[9]++; if(m[9] >= 3)   Card.display(board);  return true; break;
-    //     case '11' : m[10]++; if(m[10] >= 3) Card.display(board);  return true; break;
-    //     case '12' : m[11]++; if(m[11] >= 3) Card.display(board);  return true; break;
-
-    //   }
-    // }
     for (let i = 0; i < board.length; i++) {
-      // console.log('for');
-
       switch (board[i].get_month()) {
         case '01': m[0]++; if (m[0] >= 3) {
           return true;
@@ -159,47 +138,30 @@ class Card {
           break;
       }
     }
-    Card.display(m);
-    // for(let j = 0 ; j < m.length ; j++) {
-    //   if(m[j] >=3) {
-    //     return true;
-    //   }
-    // }
-
     return false;
   }
 
   static script_cards(public_stack) {
 
     // January
-    // new Card('01', '01', public_stack);
-    // new Card('01', '02', public_stack);
-    // new Card('01', 'RP', public_stack);
-    // new Card('01', 'BB', public_stack);
+    new Card('01', '01', public_stack);
+    new Card('01', '02', public_stack);
+    new Card('01', 'RP', public_stack);
+    new Card('01', 'BB', public_stack);
 
-    // // February, public_stack
-    // new Card('02', '01', public_stack);
-    // new Card('02', '02', public_stack);
-    // new Card('02', 'RP', public_stack);
-    // new Card('02', 'A0', public_stack);
+    // February, public_stack
+    new Card('02', '01', public_stack);
+    new Card('02', '02', public_stack);
+    new Card('02', 'RP', public_stack);
+    new Card('02', 'A0', public_stack);
 
 
-    // // March, public_stack
-    // new Card('03', '01', public_stack);
-    // new Card('03', '02', public_stack);
-    // new Card('03', 'RP', public_stack);
-    // new Card('03', 'BC', public_stack);
+    // March, public_stack
+    new Card('03', '01', public_stack);
+    new Card('03', '02', public_stack);
+    new Card('03', 'RP', public_stack);
+    new Card('03', 'BC', public_stack);
 
-    new Card('04', '01', public_stack);
-    new Card('04', '02', public_stack);
-    new Card('04', 'RR', public_stack);
-    new Card('04', 'A0', public_stack); new Card('04', '01', public_stack);
-    new Card('04', '02', public_stack);
-    new Card('04', 'RR', public_stack);
-    new Card('04', 'A0', public_stack); new Card('04', '01', public_stack);
-    new Card('04', '02', public_stack);
-    new Card('04', 'RR', public_stack);
-    new Card('04', 'A0', public_stack);
     // April, public_stack
     new Card('04', '01', public_stack);
     new Card('04', '02', public_stack);
@@ -267,46 +229,29 @@ class Card {
     hand_p1.length = 0;
     hand_p2.length = 0;
     board.length = 0;
-    // shuffle cards and distribution until a playable board
-    // while (1) {
-    // console.log('while');
-    Card.shuffle(sort_stack);
 
-    Card.distribute(sort_stack, hand_p1, hand_p2, board);
-    // console.log('board :');
-    // Card.display(board);
-    // console.log(Card.need_shake(board));
-    console.log(sort_stack.length);
-    console.log(board.length);
-    console.log(hand_p1.length);
-    console.log(hand_p2.length);
-    console.log("--------------");
-    if (Card.need_shake(board)) {
-      while (1) {
-        //on remets les cartes dans le paquet
-        for (let k = 0; k < 8; k++) {
-          Card.move_card(board[k], board, sort_stack);
-          Card.move_card(hand_p1[k], hand_p1, sort_stack);
-          Card.move_card(hand_p2[k], hand_p2, sort_stack);
-        }
+    let stack;
+    stack = Array.from(sort_stack);
 
-        if (sort_stack.length != 48) {
-          console.log('PRBLMM-------------------------------------------------------');
-          console.log(sort_stack.length);
-        }
-        Card.shuffle(sort_stack);
+    while (1) {
+      hand_p1.length = 0;
+      hand_p2.length = 0;
+      board.length = 0;
+      stack.length = 0;
+      stack = Array.from(sort_stack);
+      Card.shuffle(stack);
+      Card.distribute(stack, hand_p1, hand_p2, board);
 
-        Card.distribute(sort_stack, hand_p1, hand_p2, board);
-        if (!Card.need_shake(board)) {
-          break;
-        }
+      if (!Card.need_shake(board)) {
+        return stack;
       }
     }
-
-
-    // }
   }
+
+
+  // }
 }
+
 
 module.exports = Card
 

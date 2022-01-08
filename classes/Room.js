@@ -1,6 +1,7 @@
 class Room {
     NB_MAX = 2;
     sort_stack;
+    stack;
     p1; 
     p2;
     name;
@@ -12,6 +13,7 @@ class Room {
         this.name = name;
         this.sort_stack = perso_stack;
         this.board = new Array();
+        this.stack = new Array();
     }
 
     add_p2 (p2) {
@@ -43,7 +45,13 @@ class Room {
         return this.sort_stack;
     }
 
+    set_stack(stack) {
+        this.stack = Array.from(stack);
+    }
 
+    get_stack() {
+        return this.stack;
+    }
 }
 
 module.exports = Room
