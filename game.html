@@ -29,6 +29,7 @@
         height: 100px;
         width: 70px;
         margin: 5px;
+        background-color: rgb(136, 113, 82); 
       }
 
       .main {
@@ -131,9 +132,9 @@
         }
       });
 
-      socket.on('enemy', function (tab) {
-        for (let i = 0; i < tab.length; i++) {
-          add_card(tab[i], enemy_stack);
+      socket.on('enemy', function (nb_card) {
+        for (let i = 0; i < nb_card; i++) {
+          add_enemy_card();
         }
       });
 
@@ -146,6 +147,12 @@
           }
         }
       });
+
+      function add_enemy_card() {
+        var div = document.createElement("div");
+        div.classList.add('carte');
+        enemy_stack.append(div);
+      }
 
       function add_card(nom, stack) {
         var div = document.createElement("div");
