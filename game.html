@@ -1,169 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/style.css">
-    <style>
-      body {
-        background-color: rgb(230, 222, 212);
-        margin: 0;
-      }
 
-      .game {
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        width: 100vw;
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style/style.css">
+  <style>
+    body {
+      background-color: rgb(230, 222, 212);
+      margin: 0;
+    }
 
-      .bloc {
-        height: 33.333%;
-        width: 100%;
-        display: flex;
-        align-items: center;
-      }
+    .game {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+    }
 
-      .carte {
-        height: 100px;
-        width: 70px;
-        margin: 5px;
-        background-color: rgb(136, 113, 82); 
-      }
+    .bloc {
+      height: 33.333%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
 
-      .main {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-      }
+    .carte {
+      height: 100px;
+      width: 70px;
+      margin: 5px;
+      background-color: rgb(136, 113, 82);
+    }
 
-      .demi {
-        display: flex;
-        height: 100%;
-        width: 50%;
-        align-items: center;
-      }
+    .main {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+    }
 
-      .right .carte {
-        background-color: rgb(233, 210, 182);
-      }
+    .demi {
+      display: flex;
+      height: 100%;
+      width: 50%;
+      align-items: center;
+    }
 
-      #mid .board {
-        display: flex;
-        flex-direction: column;
-        margin-left: 30vw;
-      }
+    .right .carte {
+      background-color: rgb(233, 210, 182);
+    }
 
-      #mid .board .rangee {
-        display: flex;
-      }
+    #mid .board {
+      display: flex;
+      flex-direction: column;
+      margin-left: 30vw;
+    }
 
-      .tas {
-        background-color: rgb(71, 60, 44);
-      }
+    #mid .board .rangee {
+      display: flex;
+    }
 
-      button {
-        width: 100%;
-        height: 100%;
-        background-color: rgb(136, 113, 82);
-      }
-    </style>
-    <script src="/socket.io/socket.io.js"></script>
-    <title>Hanafuda</title>
-  </head>
+    .tas {
+      background-color: rgb(71, 60, 44);
+    }
 
-  <body>
-    <div class="game">
-      <div class="bloc" id="top">
-        <div class="left demi" id="enemy">
+    button {
+      width: 100%;
+      height: 100%;
+      background-color: rgb(136, 113, 82);
+    }
+  </style>
+  <script src="/socket.io/socket.io.js"></script>
+  <title>Hanafuda</title>
+</head>
 
-        </div>
-        <div class="right demi">
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-        </div>
+<body>
+  <div class="game">
+    <div class="bloc" id="top">
+      <div class="left demi" id="enemy">
+
       </div>
-      <div class="bloc" id="mid">
-        <div class="carte tas"></div>
-        <div class="board">
-          <div class="top rangee" id="board_top">
-
-          </div>
-          <div class="bot rangee" id="board_bot">
-
-          </div>
-        </div>
+      <div class="right demi">
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
       </div>
-      <div class="bloc" id="bot">
-        <div class="left demi" id="perso">
+    </div>
+    <div class="bloc" id="mid">
+      <div class="carte tas"></div>
+      <div class="board">
+        <div class="top rangee" id="board_top">
 
         </div>
-        <div class="right demi">
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
-          <div class="carte"></div>
+        <div class="bot rangee" id="board_bot">
+
         </div>
       </div>
     </div>
+    <div class="bloc" id="bot">
+      <div class="left demi" id="perso">
+
+      </div>
+      <div class="right demi">
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+        <div class="carte"></div>
+      </div>
+    </div>
+  </div>
 
 
-    <script>
-      var socket = io();
-      var enemy_stack = document.getElementById('enemy');
-      var perso_stack = document.getElementById('perso');
-      var board_top = document.getElementById('board_top');
-      var board_bot = document.getElementById('board_bot');
+  <script>
+    var socket = io();
+    var enemy_stack = document.getElementById('enemy');
+    var perso_stack = document.getElementById('perso');
+    var board_top = document.getElementById('board_top');
+    var board_bot = document.getElementById('board_bot');
 
-      socket.on('perso', function (tab) {
-        for (let i = 0; i < tab.length; i++) {
-          add_card(tab[i], perso_stack);
-        }
-      });
+    var c = document.getElementById('_card');
 
-      socket.on('enemy', function (nb_card) {
-        for (let i = 0; i < nb_card; i++) {
-          add_enemy_card();
-        }
-      });
-
-      socket.on('board', function (tab) {
-        for (let i = 0; i < tab.length; i++) {
-          if (i % 2 == 0) {
-            add_card(tab[i], board_top);
-          } else {
-            add_card(tab[i], board_bot);
-          }
-        }
-      });
-
-      function add_enemy_card() {
-        var div = document.createElement("div");
-        div.classList.add('carte');
-        enemy_stack.append(div);
+    socket.on('perso', function (tab) {
+      for (let i = 0; i < tab.length; i++) {
+        add_card(tab[i], perso_stack);
       }
+    });
 
-      function add_card(nom, stack) {
-        var div = document.createElement("div");
-        div.classList.add('carte');
-        var p = document.createElement("button");
-        p.innerText = nom;
-        div.appendChild(p);
-
-        stack.append(div);
+    socket.on('enemy', function (nb_card) {
+      for (let i = 0; i < nb_card; i++) {
+        add_enemy_card();
       }
-    </script>
-  </body>
+    });
+
+    socket.on('board', function (tab) {
+      for (let i = 0; i < tab.length; i++) {
+        if (i % 2 == 0) {
+          add_card(tab[i], board_top);
+        } else {
+          add_card(tab[i], board_bot);
+        }
+      }
+    });
+
+    function add_enemy_card() {
+      var div = document.createElement("div");
+      div.classList.add('carte');
+      enemy_stack.append(div);
+    }
+
+    function add_card(nom, stack) {
+      var div = document.createElement("div");
+      div.classList.add('carte');
+      var p = document.createElement("button");
+      p.setAttribute('id', '_card');
+      p.innerText = nom;
+      div.appendChild(p);
+
+      stack.append(div);
+    }
+
+    c.addEventListener('click', function () {
+      console.log(heyo);
+    });
+
+
+
+  </script>
+</body>
 
 </html>
