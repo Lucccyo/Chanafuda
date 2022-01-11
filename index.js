@@ -110,20 +110,8 @@ var distribution = function (r) {
   // Player.display_tab(r.get_p2().get_hand());
 }
 
-// a socket send a msg, we want this msg appear only on his room
 io.on('connection', (socket) => {
-  socket.on('chat message', () => {
-    let sender;
-    // we search the sender id to know his opponent
-    for(i = 0 ; i < players.length ; i++) {
-      if(socket.id == players[i].get_id()) {
-        sender = players[i];
-      }
-    }
-    target_id = sender.get_his_mate_id();
-
-    // the msg is displayed on the room
-    io.to(target_id).emit('chat message', "hi");
-    io.to(socket.id).emit('chat message', msg);
+  socket.on('first_part', (card_name) => {
+    console.log("carte cliquée : " + card_name);
   });
 });

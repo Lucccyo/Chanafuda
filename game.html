@@ -127,8 +127,6 @@
     var board_top = document.getElementById('board_top');
     var board_bot = document.getElementById('board_bot');
 
-    var c = document.getElementById('_card');
-
     socket.on('perso', function (tab) {
       for (let i = 0; i < tab.length; i++) {
         add_card(tab[i], perso_stack);
@@ -161,18 +159,20 @@
       var div = document.createElement("div");
       div.classList.add('carte');
       var p = document.createElement("button");
-      p.setAttribute('id', '_card');
+      p.onclick = function() {
+        send_card(nom);
+      }
       p.innerText = nom;
       div.appendChild(p);
 
       stack.append(div);
     }
 
-    c.addEventListener('click', function () {
-      console.log(heyo);
-    });
 
-
+    function send_card(card_n) {
+      // envoie de la carte cliquée
+      socket.emit('first_part', card_n);
+    }
 
   </script>
 </body>
