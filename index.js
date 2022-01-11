@@ -8,6 +8,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const { distribute } = require('./classes/Card.js');
+const { match } = require('assert');
 const io = new Server(server);
 
 
@@ -37,7 +38,7 @@ io.on('connection', (socket) => {
   console.log(p.get_id(), ' connected');
 
   // give him a gameroom
-  if(room_temp == null) {
+  if (room_temp == null) {
     personal_stack = Array.from(public_stack);    //création copie du tableau trié de carte pour cette room
     r = new Room(nb_room, p, personal_stack);
     p.go_to_room(r);
@@ -53,7 +54,7 @@ io.on('connection', (socket) => {
 
   // display where he is
   console.log(socket.id, ' on room n° ', p.get_his_room().get_id_room());
-  
+
   socket.on('disconnect', () => {
     console.log(socket.id, ' disconnected');
   });
@@ -84,8 +85,8 @@ var start = function (r) {
 
 function construct_name_tab(card_tab) {
   var tab_name = [];
-  for(var i = 0 ; i <card_tab.length ; i++) {
-    tab_name.push(card_tab[i].get_name_show());
+  for (var i = 0; i < card_tab.length; i++) {
+    tab_name.push(card_tab[i].get_name());
   }
   return tab_name;
 }
@@ -110,8 +111,28 @@ var distribution = function (r) {
   // Player.display_tab(r.get_p2().get_hand());
 }
 
+
 io.on('connection', (socket) => {
   socket.on('first_part', (card_name) => {
-    console.log("carte cliquée : " + card_name);
+
+    // on retrouver le joueur grace a l'id de sa socket
+    let p;
+    let cpt = 0;
+    while (1) {
+      if (players[cpt].get_id() == socket.id) {
+        p = players[cpt];
+        break;
+      }
+      cpt++;
+    }
+
+    p.get_his_room().turn_fp(p, card_name);
+
   });
 });
+
+
+
+// function match(card_name, board) {
+
+// }

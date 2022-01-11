@@ -7,6 +7,11 @@ class Room {
     name;
     is_locked = false;
     board;
+
+    card_sent_fp;
+    turn_lock = false;
+    is_p1 = true; 
+
     
     constructor(name, p1, perso_stack) {
         this.p1 = p1;
@@ -52,6 +57,40 @@ class Room {
     get_stack() {
         return this.stack;
     }
+
+    turn_fp(player, card_name) {
+        if(player.get_id() == this.p1.get_id()) {
+            this.is_p1 = true;
+        } else {
+            this.is_p1 = false;
+        }
+        this.set_card_sent_fp(card_name);
+
+    }
+
+
+    set_card_sent_fp(card) {
+        if(!this.turn_lock) {
+            this.card_sent_fp = card;
+            this.turn_lock = true;
+        } else {
+            console.log("Une carte a déja été cliquée");
+        }
+    }
+
+
+
+
+
+
+
+
+    contain(hand, card_n) {
+        for(let i = 0 ; i < hand.length ; i++) {
+            if(hand[i].get_name() == card_n) return hand[i];
+        }
+        return false;
+      }
 }
 
 module.exports = Room
