@@ -128,18 +128,22 @@
     var board_bot = document.getElementById('board_bot');
 
     socket.on('perso', function (tab) {
+      perso_stack.innerHTML = '';
       for (let i = 0; i < tab.length; i++) {
         add_card(tab[i], perso_stack);
       }
     });
 
     socket.on('enemy', function (nb_card) {
+      enemy_stack.innerHTML = '';
       for (let i = 0; i < nb_card; i++) {
         add_enemy_card();
       }
     });
 
     socket.on('board', function (tab) {
+      board_bot.innerHTML = '';
+      board_top.innerHTML = '';
       for (let i = 0; i < tab.length; i++) {
         if (i % 2 == 0) {
           add_card(tab[i], board_top);
