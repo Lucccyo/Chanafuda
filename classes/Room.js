@@ -1,4 +1,5 @@
-const Card = require('./classes/Card.js')
+const Player = require("./Player");
+
 class Room {
   NB_MAX = 2;
   sort_stack;
@@ -11,11 +12,11 @@ class Room {
 
   card_sent_fp;
   turn_lock = false;
-  is_p1 = true;
 
 
   constructor(name, p1, perso_stack) {
     this.p1 = p1;
+    this.p1.set_p1(true);
     this.name = name;
     this.sort_stack = perso_stack;
     this.board = new Array();
@@ -24,6 +25,7 @@ class Room {
 
   add_p2(p2) {
     this.p2 = p2;
+    this.p2.set_p1(false);
     this.is_locked = true;
   }
 
@@ -60,90 +62,43 @@ class Room {
   }
 
   turn_fp(player, card_name) {
-    if (player.get_id() == this.p1.get_id()) {
-      this.is_p1 = true;
-    } else {
-      this.is_p1 = false;
-    }
 
-    this.turn_lock = true;
-    this.set_card_sent_fp(card_name);
+      this.set_card_sent_fp(card_name);
 
   }
 
 
   set_card_sent_fp(card) {
-    this.card_sent_fp = card;
-    console.log("Une carte a déja été cliquée");
+    if(!this.turn_lock) {
+      this.card_sent_fp = card;
+    this.turn_lock = true;
+    } else {
+      console.log("Vous avez déja selectionné une carte.");
+    }
+
   }
 
+  init_fp(player, card_name) {
+    this.set_card_sent_fp(card_name);
+    return this.contain(player.get_hand(), card_name);
+  }
 
-
-
-
-
-<<<<<<< Updated upstream
-    // turn_fp(player, card_name) {
-    //     if(player.get_id() == this.p1.get_id()) {
-    //         this.is_p1 = true;
-    //     } else {
-    //         this.is_p1 = false;
-    //     }
-    //     this.set_card_sent_fp(card_name);
-
-    //     // verification si la carte appartient bien a la main du joueur
-    //     let card = this.contain(player.get_hand(), card_name);
-    //     if (card == -1) {
-    //         console.log("You are cheating")
-    //     }
-        
-    //     let match(card);
-
-    init_fp(player, card_name) {
-        set_card_sent_fp(card_name);
-        return this.contain(player.get_hand(), card_name);
+  match(card) {
+    let match_cards = new Array();
+    for (let i = 0; i < this.get_board().length; i++) {
+      if (card.get_month() == this.get_board()[i].get_month()) {
+        match_cards.push(this.get_board()[i]);
+      }
     }
-
-    match(card) {
-        let match_cards = new Array();
-        for(let i = 0 ; i < this.get_board().length ; i++) {
-            if(card.get_month() == this.get_board()[i].get_month()) {
-                match_cards.push(this.get_board()[i]);
-            }
-        }
-        return match_cards;
-    }
-        
-
-    // }
-=======
-
->>>>>>> Stashed changes
+    return match_cards;
+  }
 
   contain(hand, card_n) {
     for (let i = 0; i < hand.length; i++) {
       if (hand[i].get_name() == card_n) return hand[i];
     }
-<<<<<<< Updated upstream
-
-
-
-
-
-
-
-
-
-    contain(hand, card_n) {
-        for(let i = 0 ; i < hand.length ; i++) {
-            if(hand[i].get_name() == card_n) return hand[i];
-        }
-        return -1;
-      }
-=======
-    return false;
+    return -1;
   }
->>>>>>> Stashed changes
 }
 
 module.exports = Room

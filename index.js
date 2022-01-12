@@ -71,8 +71,7 @@ var start = function (r) {
   var p1_hand_name = construct_name_tab(p1.get_hand());
   var p2_hand_name = construct_name_tab(p2.get_hand());
   var board_hand_name = construct_name_tab(r.get_board());
-  io.to(p1.get_id()).emit('turn', 'o');
-  io.to(p2.get_id()).emit('turn', 'c');
+
   io.to(p1.get_id()).emit('perso', p1_hand_name);
   io.to(p1.get_id()).emit('enemy', p2_hand_name.length);
 
@@ -81,8 +80,6 @@ var start = function (r) {
 
   io.to(p1.get_id()).emit('board', board_hand_name);
   io.to(p2.get_id()).emit('board', board_hand_name);
-
-
 }
 
 
@@ -128,28 +125,38 @@ io.on('connection', (socket) => {
       }
       cpt++;
     }
+    if (!p.get_is_p1()) {
+      console.log("Ce n'est pas votre tour");
 
-    let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
-    if(c == -1) {
-      console.log("You are cheating");
-      return 2;
+    } else {
+      let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
+      if (c == -1) {
+        console.log("You are cheating");
+        return 2;
+      }
+
+      let tab_matchs = p.get_his_room().match(c);
+      console.log(p.get_is_p1());
+      if (tab_matchs.length == 0) {
+        //interroger le client
+
+        // Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
+        console.log("carte -> board car aucun appairage possible.");
+
+        // io.to(p1.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+        // io.to(p2.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+      }
+      Player.display_tab(tab_matchs);
+      // io.to(p1.get_id()).emit('perso', p1_hand_name);
+      // io.to(p1.get_id()).emit('enemy', p2_hand_name.length);
+
+      // io.to(p2.get_id()).emit('perso', p2_hand_name);
+      // io.to(p2.get_id()).emit('enemy', p1_hand_name.length);
+
+      // io.to(p1.get_id()).emit('board', board_hand_name);
+      // io.to(p2.get_id()).emit('board', board_hand_name);
+
     }
-
-    let tab_matchs = p.get_his_room().match(c);
-    if(tab_matchs.length > 1) {
-      //interroger le client
-    }
-
-    // io.to(p1.get_id()).emit('perso', p1_hand_name);
-    // io.to(p1.get_id()).emit('enemy', p2_hand_name.length);
-
-    // io.to(p2.get_id()).emit('perso', p2_hand_name);
-    // io.to(p2.get_id()).emit('enemy', p1_hand_name.length);
-
-    // io.to(p1.get_id()).emit('board', board_hand_name);
-    // io.to(p2.get_id()).emit('board', board_hand_name);
-
-
   });
 });
 

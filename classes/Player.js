@@ -1,11 +1,20 @@
 class Player {
     id;
+    is_p1;
     hand;
     depository;
     constructor(id) {
         this.id = id;
         this.hand = new Array();
         this.depository = new Array();
+    }
+
+    set_p1(bool) {
+        this.is_p1 = bool;
+    }
+
+    get_is_p1() {
+        return this.is_p1;
     }
 
     get_id() {
