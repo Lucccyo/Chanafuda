@@ -127,6 +127,8 @@
     var board_top = document.getElementById('board_top');
     var board_bot = document.getElementById('board_bot');
 
+    var mid_div = document.getElementById('mid');
+
     socket.on('perso', function (tab) {
       perso_stack.innerHTML = '';
       for (let i = 0; i < tab.length; i++) {
@@ -177,6 +179,25 @@
       // envoie de la carte cliquée
       socket.emit('first_part', card_n);
     }
+
+
+    socket.on('turn', function (flag) {
+      console.log("hello");
+      switch (flag) {
+        // o for open
+        // c for close
+        case 'o' : 
+          let o = document.createElement("p");
+          o.innerContent = "Votre tour";
+          mid_div.append(o);
+        case 'c' : 
+        let o = document.createElement("p");
+        o.innerContent = "Tour de l'adversaire";
+        mid_div.append(o);
+      }
+      console.log('toto');
+    });
+
 
   </script>
 </body>

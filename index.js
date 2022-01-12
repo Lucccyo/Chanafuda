@@ -71,7 +71,8 @@ var start = function (r) {
   var p1_hand_name = construct_name_tab(p1.get_hand());
   var p2_hand_name = construct_name_tab(p2.get_hand());
   var board_hand_name = construct_name_tab(r.get_board());
-
+  io.to(p1.get_id()).emit('turn', 'o');
+  io.to(p2.get_id()).emit('turn', 'c');
   io.to(p1.get_id()).emit('perso', p1_hand_name);
   io.to(p1.get_id()).emit('enemy', p2_hand_name.length);
 
@@ -80,6 +81,8 @@ var start = function (r) {
 
   io.to(p1.get_id()).emit('board', board_hand_name);
   io.to(p2.get_id()).emit('board', board_hand_name);
+
+
 }
 
 
