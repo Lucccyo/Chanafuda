@@ -67,7 +67,7 @@
     button {
       width: 100%;
       height: 100%;
-      background-color: rgb(136, 113, 82);
+      background-color: rgba(136, 113, 82, 0);
     }
   </style>
   <script src="/socket.io/socket.io.js"></script>
@@ -146,9 +146,9 @@
       board_top.innerHTML = '';
       for (let i = 0; i < tab.length; i++) {
         if (i % 2 == 0) {
-          add_card(tab[i], board_top);
+          add_board_card(tab[i], board_top, i);
         } else {
-          add_card(tab[i], board_bot);
+          add_board_card(tab[i], board_bot, i);
         }
       }
     });
@@ -168,7 +168,19 @@
       }
       p.innerText = nom;
       div.appendChild(p);
+      stack.append(div);
+    }
 
+    function add_board_card(nom, stack, index) {
+      var div = document.createElement("div");
+      div.classList.add('carte');
+      div.setAttribute('id', index);
+      var p = document.createElement("button");
+      p.onclick = function() {
+        send_card(nom);
+      }
+      p.innerText = nom;
+      div.appendChild(p);
       stack.append(div);
     }
 
@@ -177,6 +189,15 @@
       // envoie de la carte cliquée
       socket.emit('first_part', card_n);
     }
+
+
+    socket.on('choice', function (tab) {
+      let card_1 = document.getElementById(tab[0]);
+      let card_2 = document.getElementById(tab[1]);
+
+      card_1.style.background = 'red';
+      card_2.style.background = 'red';
+    });
 
   </script>
 </body>

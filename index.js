@@ -151,11 +151,8 @@ io.on('connection', (socket) => {
           io.to(p.get_his_room().get_p2().get_id()).emit('enemy', p.get_hand().length);
           break;
         case 1 : 
-          
-          Player.display_tab(p.get_hand());
           console.log("Un appairage possible --> automatique");
           Card.move_card(c, p.get_hand(), p.get_depository());
-          Player.display_tab(p.get_hand());
           Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
 
           io.to(p.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
@@ -168,7 +165,15 @@ io.on('connection', (socket) => {
           io.to(p.get_his_room().get_p2().get_id()).emit('enemy', p.get_hand().length);
           break;
         case 2 : 
-          console.log("Deux appairages possibles --> client choisi");
+          let tab_id = new Array();
+          for(let i = 0 ; i < p.get_his_room().get_board().length ; i++) {
+            if(p.get_his_room().get_board()[i] == tab_matchs[0] || p.get_his_room().get_board()[i] == tab_matchs[1]) {
+              tab_id.push(i);
+            }
+          }
+          Player.display_tab(tab_id);
+          io.to(p.get_id()).emit('choice', tab_id);
+          console.log('envoyé');
           break;
         default : console.log("Pas normal");
         break;
