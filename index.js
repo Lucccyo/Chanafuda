@@ -134,17 +134,21 @@ io.on('connection', (socket) => {
         console.log("You are cheating");
         return 2;
       }
-
       let tab_matchs = p.get_his_room().match(c);
       console.log(p.get_is_p1());
       if (tab_matchs.length == 0) {
-        //interroger le client
 
-        // Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
+        Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
         console.log("carte -> board car aucun appairage possible.");
 
-        // io.to(p1.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
-        // io.to(p2.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+        io.to(p1.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+        io.to(p2.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+
+        io.to(p1.get_id()).emit('perso', construct_name_tab(p.get_hand()));
+        io.to(p1.get_id()).emit('enemy', p.get_his_room().get_p2().get_hand().length);
+
+        io.to(p2.get_id()).emit('perso', construct_name_tab(p.get_his_room().get_p2().get_hand()));
+        io.to(p2.get_id()).emit('enemy', p.get_hand().length);
       }
       Player.display_tab(tab_matchs);
       // io.to(p1.get_id()).emit('perso', p1_hand_name);
