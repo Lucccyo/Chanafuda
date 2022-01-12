@@ -1,3 +1,4 @@
+const Card = require('./classes/Card.js')
 class Room {
     NB_MAX = 2;
     sort_stack;
@@ -58,15 +59,39 @@ class Room {
         return this.stack;
     }
 
-    turn_fp(player, card_name) {
-        if(player.get_id() == this.p1.get_id()) {
-            this.is_p1 = true;
-        } else {
-            this.is_p1 = false;
-        }
-        this.set_card_sent_fp(card_name);
+    // turn_fp(player, card_name) {
+    //     if(player.get_id() == this.p1.get_id()) {
+    //         this.is_p1 = true;
+    //     } else {
+    //         this.is_p1 = false;
+    //     }
+    //     this.set_card_sent_fp(card_name);
 
+    //     // verification si la carte appartient bien a la main du joueur
+    //     let card = this.contain(player.get_hand(), card_name);
+    //     if (card == -1) {
+    //         console.log("You are cheating")
+    //     }
+        
+    //     let match(card);
+
+    init_fp(player, card_name) {
+        set_card_sent_fp(card_name);
+        return this.contain(player.get_hand(), card_name);
     }
+
+    match(card) {
+        let match_cards = new Array();
+        for(let i = 0 ; i < this.get_board().length ; i++) {
+            if(card.get_month() == this.get_board()[i].get_month()) {
+                match_cards.push(this.get_board()[i]);
+            }
+        }
+        return match_cards;
+    }
+        
+
+    // }
 
 
     set_card_sent_fp(card) {
@@ -85,11 +110,12 @@ class Room {
 
 
 
+
     contain(hand, card_n) {
         for(let i = 0 ; i < hand.length ; i++) {
             if(hand[i].get_name() == card_n) return hand[i];
         }
-        return false;
+        return -1;
       }
 }
 

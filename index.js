@@ -126,7 +126,26 @@ io.on('connection', (socket) => {
       cpt++;
     }
 
-    p.get_his_room().turn_fp(p, card_name);
+    let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
+    if(c == -1) {
+      console.log("You are cheating");
+      return 2;
+    }
+
+    let tab_matchs = p.get_his_room().match(c);
+    if(tab_matchs.length > 1) {
+      //interroger le client
+    }
+
+    // io.to(p1.get_id()).emit('perso', p1_hand_name);
+    // io.to(p1.get_id()).emit('enemy', p2_hand_name.length);
+
+    // io.to(p2.get_id()).emit('perso', p2_hand_name);
+    // io.to(p2.get_id()).emit('enemy', p1_hand_name.length);
+
+    // io.to(p1.get_id()).emit('board', board_hand_name);
+    // io.to(p2.get_id()).emit('board', board_hand_name);
+
 
   });
 });
