@@ -136,21 +136,46 @@ io.on('connection', (socket) => {
       }
       let tab_matchs = p.get_his_room().match(c);
       console.log(p.get_is_p1());
-      if (tab_matchs.length == 0) {
+      switch (tab_matchs.length) {
+        case 0:
+          Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
+          console.log("carte -> board car aucun appairage possible.");
 
-        Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
-        console.log("carte -> board car aucun appairage possible.");
+          io.to(p.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+          io.to(p.get_his_room().get_p2().get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
 
-        io.to(p1.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
-        io.to(p2.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+          io.to(p.get_id()).emit('perso', construct_name_tab(p.get_hand()));
+          io.to(p.get_id()).emit('enemy', p.get_his_room().get_p2().get_hand().length);
 
-        io.to(p1.get_id()).emit('perso', construct_name_tab(p.get_hand()));
-        io.to(p1.get_id()).emit('enemy', p.get_his_room().get_p2().get_hand().length);
+          io.to(p.get_his_room().get_p2().get_id()).emit('perso', construct_name_tab(p.get_his_room().get_p2().get_hand()));
+          io.to(p.get_his_room().get_p2().get_id()).emit('enemy', p.get_hand().length);
+          break;
+        case 1 : 
+          
+          Player.display_tab(p.get_hand());
+          console.log("Un appairage possible --> automatique");
+          Card.move_card(c, p.get_hand(), p.get_depository());
+          Player.display_tab(p.get_hand());
+          Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
 
-        io.to(p2.get_id()).emit('perso', construct_name_tab(p.get_his_room().get_p2().get_hand()));
-        io.to(p2.get_id()).emit('enemy', p.get_hand().length);
+          io.to(p.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+          io.to(p.get_his_room().get_p2().get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+
+          io.to(p.get_id()).emit('perso', construct_name_tab(p.get_hand()));
+          io.to(p.get_id()).emit('enemy', p.get_his_room().get_p2().get_hand().length);
+
+          io.to(p.get_his_room().get_p2().get_id()).emit('perso', construct_name_tab(p.get_his_room().get_p2().get_hand()));
+          io.to(p.get_his_room().get_p2().get_id()).emit('enemy', p.get_hand().length);
+          break;
+        case 2 : 
+          console.log("Deux appairages possibles --> client choisi");
+          break;
+        default : console.log("Pas normal");
+        break;
       }
-      Player.display_tab(tab_matchs);
+
+
+      
       // io.to(p1.get_id()).emit('perso', p1_hand_name);
       // io.to(p1.get_id()).emit('enemy', p2_hand_name.length);
 

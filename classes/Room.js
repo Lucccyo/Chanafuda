@@ -69,12 +69,12 @@ class Room {
 
 
   set_card_sent_fp(card) {
-    if(!this.turn_lock) {
+    // if(!this.turn_lock) {
       this.card_sent_fp = card;
     this.turn_lock = true;
-    } else {
-      console.log("Vous avez déja selectionné une carte.");
-    }
+    // } else {
+    //   console.log("Vous avez déja selectionné une carte.");
+    // }
 
   }
 
