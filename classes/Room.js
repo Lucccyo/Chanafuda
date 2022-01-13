@@ -1,8 +1,8 @@
-const Player = require("./Player");
+const Card = require("./Card");
 
 class Room {
   NB_MAX = 2;
-  sort_stack;
+  // sort_stack;
   stack;
   p1;
   p2;
@@ -14,13 +14,14 @@ class Room {
   turn_lock = false;
 
 
-  constructor(name, p1, perso_stack) {
+  constructor(name, p1) {
     this.p1 = p1;
     this.p1.set_p1(true);
     this.name = name;
-    this.sort_stack = perso_stack;
+    this.stack = Card.shuffle(Array.from(Card.get_sort_stack()));
+    // console.log(this.stack.length);
     this.board = new Array();
-    this.stack = new Array();
+    // this.stack = new Array();
   }
 
   add_p2(p2) {
@@ -47,14 +48,6 @@ class Room {
 
   get_board() {
     return this.board;
-  }
-
-  get_sort_stack() {
-    return this.sort_stack;
-  }
-
-  set_stack(stack) {
-    this.stack = Array.from(stack);
   }
 
   get_stack() {

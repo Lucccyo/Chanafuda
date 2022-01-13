@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
-  Card.script_cards(public_stack);
+  Card.script_cards();
 });
 
 
@@ -39,21 +39,22 @@ io.on('connection', (socket) => {
 
   // give him a gameroom
   if (room_temp == null) {
-    personal_stack = Array.from(public_stack);    //création copie du tableau trié de carte pour cette room
-    r = new Room(nb_room, p, personal_stack);
+    // personal_stack = Array.from(public_stack);    //création copie du tableau trié de carte pour cette room
+    r = new Room(nb_room, p);
     p.go_to_room(r);
+    // display where he is
+    console.log(socket.id, ' on room n° ', p.get_his_room().get_id_room());
     room_temp = r;
     nb_room++;
   } else {
     room_temp.add_p2(p);
     p.go_to_room(room_temp);
     //game starts
+    // display where he is
+    console.log(socket.id, ' on room n° ', p.get_his_room().get_id_room());
     start(room_temp);
     room_temp = null;
   }
-
-  // display where he is
-  console.log(socket.id, ' on room n° ', p.get_his_room().get_id_room());
 
   socket.on('disconnect', () => {
     console.log(socket.id, ' disconnected');
@@ -64,23 +65,26 @@ io.on('connection', (socket) => {
 var start = function (r) {
   p1 = r.get_p1();
   p2 = r.get_p2();
-
   distribution(r);
-
-  // construction du tableau de noms de cartes; plus tard tab de nom d'image
-  var p1_hand_name = construct_name_tab(p1.get_hand());
-  var p2_hand_name = construct_name_tab(p2.get_hand());
-  var board_hand_name = construct_name_tab(r.get_board());
-
-  io.to(p1.get_id()).emit('perso', p1_hand_name);
-  io.to(p1.get_id()).emit('enemy', p2_hand_name.length);
-
-  io.to(p2.get_id()).emit('perso', p2_hand_name);
-  io.to(p2.get_id()).emit('enemy', p1_hand_name.length);
-
-  io.to(p1.get_id()).emit('board', board_hand_name);
-  io.to(p2.get_id()).emit('board', board_hand_name);
+  etat_du_jeu(p1, p2);
 }
+
+
+function etat_du_jeu(player, enemy) {
+
+  io.to(player.get_id()).emit('perso', construct_name_tab(player.get_hand()));
+  io.to(player.get_id()).emit('enemy', enemy.get_hand().length);
+  io.to(player.get_id()).emit('board', construct_name_tab(player.get_his_room().get_board()));
+  io.to(player.get_id()).emit('pile', player.get_his_room().length);
+
+
+  io.to(enemy.get_id()).emit('perso', construct_name_tab(enemy.get_hand()));
+  io.to(enemy.get_id()).emit('enemy', player.get_hand().length);
+  io.to(enemy.get_id()).emit('board', construct_name_tab(player.get_his_room().get_board()));
+  io.to(player.get_id()).emit('pile', player.get_his_room().length);
+
+}
+
 
 
 function construct_name_tab(card_tab) {
@@ -95,8 +99,10 @@ function construct_name_tab(card_tab) {
 var distribution = function (r) {
   console.log("Distribution...")
 
-  r.set_stack(Card.init(r));
-
+  // r.set_stack(Card.init(r));
+  // Player.display_tab(r.get_stack());
+  Card.init(r);
+  
   console.log("p1 : ", r.get_p1().get_id());
   Player.display_tab(r.get_p1().get_hand());
 
@@ -150,7 +156,7 @@ io.on('connection', (socket) => {
           io.to(p.get_his_room().get_p2().get_id()).emit('perso', construct_name_tab(p.get_his_room().get_p2().get_hand()));
           io.to(p.get_his_room().get_p2().get_id()).emit('enemy', p.get_hand().length);
           break;
-        case 1 : 
+        case 1:
           console.log("Un appairage possible --> automatique");
           Card.move_card(c, p.get_hand(), p.get_depository());
           Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
@@ -164,10 +170,10 @@ io.on('connection', (socket) => {
           io.to(p.get_his_room().get_p2().get_id()).emit('perso', construct_name_tab(p.get_his_room().get_p2().get_hand()));
           io.to(p.get_his_room().get_p2().get_id()).emit('enemy', p.get_hand().length);
           break;
-        case 2 : 
+        case 2:
           let tab_id = new Array();
-          for(let i = 0 ; i < p.get_his_room().get_board().length ; i++) {
-            if(p.get_his_room().get_board()[i] == tab_matchs[0] || p.get_his_room().get_board()[i] == tab_matchs[1]) {
+          for (let i = 0; i < p.get_his_room().get_board().length; i++) {
+            if (p.get_his_room().get_board()[i] == tab_matchs[0] || p.get_his_room().get_board()[i] == tab_matchs[1]) {
               tab_id.push(i);
             }
           }
@@ -175,12 +181,12 @@ io.on('connection', (socket) => {
           io.to(p.get_id()).emit('choice', tab_id);
           console.log('envoyé');
           break;
-        default : console.log("Pas normal");
-        break;
+        default: console.log("Pas normal");
+          break;
       }
 
 
-      
+
       // io.to(p1.get_id()).emit('perso', p1_hand_name);
       // io.to(p1.get_id()).emit('enemy', p2_hand_name.length);
 
