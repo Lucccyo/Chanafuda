@@ -39,7 +39,6 @@ io.on('connection', (socket) => {
 
   // give him a gameroom
   if (room_temp == null) {
-    // personal_stack = Array.from(public_stack);    //création copie du tableau trié de carte pour cette room
     r = new Room(nb_room, p);
     p.go_to_room(r);
     // display where he is
@@ -66,11 +65,11 @@ var start = function (r) {
   p1 = r.get_p1();
   p2 = r.get_p2();
   distribution(r);
-  etat_du_jeu(p1, p2 , 'tour');
+  etat_du_jeu(p1, p2, 'turn', null);
 }
 
 
-function etat_du_jeu(player, enemy, flag) {
+function etat_du_jeu(player, enemy, flag, tab_match) {
 
   io.to(player.get_id()).emit('perso', construct_name_tab(player.get_hand()));
   io.to(player.get_id()).emit('enemy', enemy.get_hand().length);
@@ -82,14 +81,14 @@ function etat_du_jeu(player, enemy, flag) {
   io.to(enemy.get_id()).emit('board', construct_name_tab(player.get_his_room().get_board()));
   io.to(enemy.get_id()).emit('pile', player.get_his_room().get_stack().length);
 
-  switch(flag) {
-    case 'tour' : io.to(player.get_id()).emit('playable', construct_name_tab(player.get_hand()));
-    console.log('envoyé');
-    break;
+  switch (flag) {
+    case 'turn': io.to(player.get_id()).emit('playable', construct_name_tab(player.get_hand()));
+      break;
+    case 'choice': io.to(player.get_id()).emit('playable', construct_name_tab(tab_match));
+      break;
   }
 
 }
-
 
 
 function construct_name_tab(card_tab) {
@@ -104,10 +103,8 @@ function construct_name_tab(card_tab) {
 var distribution = function (r) {
   console.log("Distribution...")
 
-  // r.set_stack(Card.init(r));
-  // Player.display_tab(r.get_stack());
   Card.init(r);
-  
+
   console.log("p1 : ", r.get_p1().get_id());
   Player.display_tab(r.get_p1().get_hand());
 
@@ -125,7 +122,6 @@ var distribution = function (r) {
 
 io.on('connection', (socket) => {
   socket.on('first_part', (card_name) => {
-
     // on retrouver le joueur grace a l'id de sa socket
     let p;
     let cpt = 0;
@@ -137,78 +133,29 @@ io.on('connection', (socket) => {
       cpt++;
     }
 
+    let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
+    if (c == -1) {
+      console.log("You are cheating");
+      return 2;
+    }
 
-    // if (!p.get_is_p1()) {
-    //   console.log("Ce n'est pas votre tour");
+    let tab_matchs = p.get_his_room().match(c);
+    switch (tab_matchs.length) {
+      case 0:
+        Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
+        console.log("carte -> board car aucun appairage possible.");
+        etat_du_jeu(p, p.get_his_mate(), 'turn', null)
+        break;
+      case 1:
+        console.log("Un appairage possible --> automatique");
+        Card.move_card(c, p.get_hand(), p.get_depository());
+        Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
+        etat_du_jeu(p, p.get_his_mate(), 'turn', null);
+        break;
+      case 2:
 
-    // } else {
-    //   let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
-    //   if (c == -1) {
-    //     console.log("You are cheating");
-    //     return 2;
-    //   }
-    //   let tab_matchs = p.get_his_room().match(c);
-    //   console.log(p.get_is_p1());
-    //   switch (tab_matchs.length) {
-    //     case 0:
-    //       Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
-    //       console.log("carte -> board car aucun appairage possible.");
-
-    //       io.to(p.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
-    //       io.to(p.get_his_room().get_p2().get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
-
-    //       io.to(p.get_id()).emit('perso', construct_name_tab(p.get_hand()));
-    //       io.to(p.get_id()).emit('enemy', p.get_his_room().get_p2().get_hand().length);
-
-    //       io.to(p.get_his_room().get_p2().get_id()).emit('perso', construct_name_tab(p.get_his_room().get_p2().get_hand()));
-    //       io.to(p.get_his_room().get_p2().get_id()).emit('enemy', p.get_hand().length);
-    //       break;
-    //     case 1:
-    //       console.log("Un appairage possible --> automatique");
-    //       Card.move_card(c, p.get_hand(), p.get_depository());
-    //       Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
-
-    //       io.to(p.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
-    //       io.to(p.get_his_room().get_p2().get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
-
-    //       io.to(p.get_id()).emit('perso', construct_name_tab(p.get_hand()));
-    //       io.to(p.get_id()).emit('enemy', p.get_his_room().get_p2().get_hand().length);
-
-    //       io.to(p.get_his_room().get_p2().get_id()).emit('perso', construct_name_tab(p.get_his_room().get_p2().get_hand()));
-    //       io.to(p.get_his_room().get_p2().get_id()).emit('enemy', p.get_hand().length);
-    //       break;
-    //     case 2:
-    //       let tab_id = new Array();
-    //       for (let i = 0; i < p.get_his_room().get_board().length; i++) {
-    //         if (p.get_his_room().get_board()[i] == tab_matchs[0] || p.get_his_room().get_board()[i] == tab_matchs[1]) {
-    //           tab_id.push(i);
-    //         }
-    //       }
-    //       Player.display_tab(tab_id);
-    //       io.to(p.get_id()).emit('choice', tab_id);
-    //       console.log('envoyé');
-    //       break;
-    //     default: console.log("Pas normal");
-    //       break;
-    //   }
-
-
-
-      // io.to(p1.get_id()).emit('perso', p1_hand_name);
-      // io.to(p1.get_id()).emit('enemy', p2_hand_name.length);
-
-      // io.to(p2.get_id()).emit('perso', p2_hand_name);
-      // io.to(p2.get_id()).emit('enemy', p1_hand_name.length);
-
-      // io.to(p1.get_id()).emit('board', board_hand_name);
-      // io.to(p2.get_id()).emit('board', board_hand_name);
-
-  //   }
+        etat_du_jeu(p, p.get_his_mate(), 'choice', tab_matchs)
+        break;
+    }
   });
 });
-
-
-
-// function match(card_name, board) {
-
-// }

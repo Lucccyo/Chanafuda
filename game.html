@@ -158,13 +158,11 @@
     });
 
     socket.on('playable', function (tab) {
-      console.log("recu");
       for (let i = 0; i < tab.length; i++) {
-        console.log(tab[i]);
         let div = document.getElementById(tab[i])
         var p = document.createElement("button");
         p.onclick = function () {
-          send_card(nom);
+          send_card(tab[i]);
         }
         div.appendChild(p);
       }
@@ -181,12 +179,6 @@
       div.classList.add('carte');
       div.setAttribute('id', nom);
       div.innerText = nom;
-      // var p = document.createElement("button");
-      // p.onclick = function() {
-      //   send_card(nom);
-      // }
-      // p.innerText = nom;
-      // div.appendChild(p);
       stack.append(div);
     }
 
@@ -195,12 +187,7 @@
       div.classList.add('carte');
       div.setAttribute('id', index);
       div.setAttribute('id', nom);
-      // var p = document.createElement("button");
-      // p.onclick = function() {
-      //   send_card(nom);
-      // }
       div.innerText = nom;
-      // div.appendChild(p);
       stack.append(div);
     }
 
@@ -209,15 +196,6 @@
       // envoie de la carte cliquée
       socket.emit('first_part', card_n);
     }
-
-
-    socket.on('choice', function (tab) {
-      let card_1 = document.getElementById(tab[0]);
-      let card_2 = document.getElementById(tab[1]);
-
-      card_1.style.background = 'red';
-      card_2.style.background = 'red';
-    });
 
   </script>
 </body>

@@ -47,7 +47,7 @@ class Card {
 
   static display(tab) {
     console.log(tab.length);
-    for (let i = 0 ; i < tab.length; i++) {
+    for (let i = 0; i < tab.length; i++) {
       console.log(tab[i]);
     }
   }
@@ -76,22 +76,11 @@ class Card {
       Card.move_card(stack[i], stack, j == 0 ? hand_p1 : j == 1 ? board : hand_p2);
     }
 
-    // for (let i = 0; i < 4; i++) {
-    //   Card.move_card(stack[j + 0], stack, hand_p1);
-    //   Card.move_card(stack[j + 1], stack, hand_p1);
-    //   Card.move_card(stack[j + 2], stack, board);
-    //   Card.move_card(stack[j + 3], stack, board);
-    //   Card.move_card(stack[j + 4], stack, hand_p2);
-    //   Card.move_card(stack[j + 5], stack, hand_p2);
-
-    //   j += 6;
-    // }
   }
 
   static need_shake(board) {
 
     let m = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    // let n;
     for (let i = 0; i < board.length; i++) {
       let n = board[i].get_month() - 1;
       m[n]++; if (m[n] >= 3) return true;
@@ -182,47 +171,22 @@ class Card {
     let hand_p1 = r.get_p1().get_hand();
     let hand_p2 = r.get_p2().get_hand();
     let board = r.get_board();
-    // Card.display(stack);
-    while(1) {
-    hand_p1.length = 0;
-    hand_p2.length = 0;
-    board.length = 0;
+    while (1) {
+      hand_p1.length = 0;
+      hand_p2.length = 0;
+      board.length = 0;
 
-    Card.distribute(stack, hand_p1, hand_p2, board);
+      Card.distribute(stack, hand_p1, hand_p2, board);
 
+      if (!Card.need_shake(board)) {
+        return stack;
+      }
+      console.log("REDISTRIB");
+      stack.length = 0;
+      stack = Card.shuffle(Array.from(Card.get_sort_stack()));
 
-    if (!Card.need_shake(board)) {
-      return stack;
     }
-    console.log("REDISTRIB");
-    stack.length = 0;
-    stack = Card.shuffle(Array.from(Card.get_sort_stack()));
-
   }
-
-
-
-
-
-
-    // let stack;
-    // stack = Array.from(sort_stack);
-
-    // while (1) {
-    //   hand_p1.length = 0;
-    //   hand_p2.length = 0;
-    //   board.length = 0;
-    //   stack.length = 0;
-    //   stack = Array.from(sort_stack);
-    //   Card.shuffle(stack);
-      
-
-
-    // }
-  }
-
-
-  // }
 }
 
 
