@@ -66,22 +66,27 @@ var start = function (r) {
   p1 = r.get_p1();
   p2 = r.get_p2();
   distribution(r);
-  etat_du_jeu(p1, p2);
+  etat_du_jeu(p1, p2 , 'tour');
 }
 
 
-function etat_du_jeu(player, enemy) {
+function etat_du_jeu(player, enemy, flag) {
 
   io.to(player.get_id()).emit('perso', construct_name_tab(player.get_hand()));
   io.to(player.get_id()).emit('enemy', enemy.get_hand().length);
   io.to(player.get_id()).emit('board', construct_name_tab(player.get_his_room().get_board()));
-  io.to(player.get_id()).emit('pile', player.get_his_room().length);
-
+  io.to(player.get_id()).emit('pile', player.get_his_room().get_stack().length);
 
   io.to(enemy.get_id()).emit('perso', construct_name_tab(enemy.get_hand()));
   io.to(enemy.get_id()).emit('enemy', player.get_hand().length);
   io.to(enemy.get_id()).emit('board', construct_name_tab(player.get_his_room().get_board()));
-  io.to(player.get_id()).emit('pile', player.get_his_room().length);
+  io.to(enemy.get_id()).emit('pile', player.get_his_room().get_stack().length);
+
+  switch(flag) {
+    case 'tour' : io.to(player.get_id()).emit('playable', construct_name_tab(player.get_hand()));
+    console.log('envoyé');
+    break;
+  }
 
 }
 
@@ -131,59 +136,61 @@ io.on('connection', (socket) => {
       }
       cpt++;
     }
-    if (!p.get_is_p1()) {
-      console.log("Ce n'est pas votre tour");
 
-    } else {
-      let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
-      if (c == -1) {
-        console.log("You are cheating");
-        return 2;
-      }
-      let tab_matchs = p.get_his_room().match(c);
-      console.log(p.get_is_p1());
-      switch (tab_matchs.length) {
-        case 0:
-          Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
-          console.log("carte -> board car aucun appairage possible.");
 
-          io.to(p.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
-          io.to(p.get_his_room().get_p2().get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+    // if (!p.get_is_p1()) {
+    //   console.log("Ce n'est pas votre tour");
 
-          io.to(p.get_id()).emit('perso', construct_name_tab(p.get_hand()));
-          io.to(p.get_id()).emit('enemy', p.get_his_room().get_p2().get_hand().length);
+    // } else {
+    //   let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
+    //   if (c == -1) {
+    //     console.log("You are cheating");
+    //     return 2;
+    //   }
+    //   let tab_matchs = p.get_his_room().match(c);
+    //   console.log(p.get_is_p1());
+    //   switch (tab_matchs.length) {
+    //     case 0:
+    //       Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
+    //       console.log("carte -> board car aucun appairage possible.");
 
-          io.to(p.get_his_room().get_p2().get_id()).emit('perso', construct_name_tab(p.get_his_room().get_p2().get_hand()));
-          io.to(p.get_his_room().get_p2().get_id()).emit('enemy', p.get_hand().length);
-          break;
-        case 1:
-          console.log("Un appairage possible --> automatique");
-          Card.move_card(c, p.get_hand(), p.get_depository());
-          Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
+    //       io.to(p.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+    //       io.to(p.get_his_room().get_p2().get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
 
-          io.to(p.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
-          io.to(p.get_his_room().get_p2().get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+    //       io.to(p.get_id()).emit('perso', construct_name_tab(p.get_hand()));
+    //       io.to(p.get_id()).emit('enemy', p.get_his_room().get_p2().get_hand().length);
 
-          io.to(p.get_id()).emit('perso', construct_name_tab(p.get_hand()));
-          io.to(p.get_id()).emit('enemy', p.get_his_room().get_p2().get_hand().length);
+    //       io.to(p.get_his_room().get_p2().get_id()).emit('perso', construct_name_tab(p.get_his_room().get_p2().get_hand()));
+    //       io.to(p.get_his_room().get_p2().get_id()).emit('enemy', p.get_hand().length);
+    //       break;
+    //     case 1:
+    //       console.log("Un appairage possible --> automatique");
+    //       Card.move_card(c, p.get_hand(), p.get_depository());
+    //       Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
 
-          io.to(p.get_his_room().get_p2().get_id()).emit('perso', construct_name_tab(p.get_his_room().get_p2().get_hand()));
-          io.to(p.get_his_room().get_p2().get_id()).emit('enemy', p.get_hand().length);
-          break;
-        case 2:
-          let tab_id = new Array();
-          for (let i = 0; i < p.get_his_room().get_board().length; i++) {
-            if (p.get_his_room().get_board()[i] == tab_matchs[0] || p.get_his_room().get_board()[i] == tab_matchs[1]) {
-              tab_id.push(i);
-            }
-          }
-          Player.display_tab(tab_id);
-          io.to(p.get_id()).emit('choice', tab_id);
-          console.log('envoyé');
-          break;
-        default: console.log("Pas normal");
-          break;
-      }
+    //       io.to(p.get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+    //       io.to(p.get_his_room().get_p2().get_id()).emit('board', construct_name_tab(p.get_his_room().get_board()));
+
+    //       io.to(p.get_id()).emit('perso', construct_name_tab(p.get_hand()));
+    //       io.to(p.get_id()).emit('enemy', p.get_his_room().get_p2().get_hand().length);
+
+    //       io.to(p.get_his_room().get_p2().get_id()).emit('perso', construct_name_tab(p.get_his_room().get_p2().get_hand()));
+    //       io.to(p.get_his_room().get_p2().get_id()).emit('enemy', p.get_hand().length);
+    //       break;
+    //     case 2:
+    //       let tab_id = new Array();
+    //       for (let i = 0; i < p.get_his_room().get_board().length; i++) {
+    //         if (p.get_his_room().get_board()[i] == tab_matchs[0] || p.get_his_room().get_board()[i] == tab_matchs[1]) {
+    //           tab_id.push(i);
+    //         }
+    //       }
+    //       Player.display_tab(tab_id);
+    //       io.to(p.get_id()).emit('choice', tab_id);
+    //       console.log('envoyé');
+    //       break;
+    //     default: console.log("Pas normal");
+    //       break;
+    //   }
 
 
 
@@ -196,7 +203,7 @@ io.on('connection', (socket) => {
       // io.to(p1.get_id()).emit('board', board_hand_name);
       // io.to(p2.get_id()).emit('board', board_hand_name);
 
-    }
+  //   }
   });
 });
 

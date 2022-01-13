@@ -153,6 +153,23 @@
       }
     });
 
+    socket.on('pile', function (nb_card) {
+      console.log("Dans la pile, il y a " + nb_card + " cartes.");
+    });
+
+    socket.on('playable', function (tab) {
+      console.log("recu");
+      for (let i = 0; i < tab.length; i++) {
+        console.log(tab[i]);
+        let div = document.getElementById(tab[i])
+        var p = document.createElement("button");
+        p.onclick = function () {
+          send_card(nom);
+        }
+        div.appendChild(p);
+      }
+    });
+
     function add_enemy_card() {
       var div = document.createElement("div");
       div.classList.add('carte');
@@ -162,12 +179,14 @@
     function add_card(nom, stack) {
       var div = document.createElement("div");
       div.classList.add('carte');
-      var p = document.createElement("button");
-      p.onclick = function() {
-        send_card(nom);
-      }
-      p.innerText = nom;
-      div.appendChild(p);
+      div.setAttribute('id', nom);
+      div.innerText = nom;
+      // var p = document.createElement("button");
+      // p.onclick = function() {
+      //   send_card(nom);
+      // }
+      // p.innerText = nom;
+      // div.appendChild(p);
       stack.append(div);
     }
 
@@ -175,12 +194,13 @@
       var div = document.createElement("div");
       div.classList.add('carte');
       div.setAttribute('id', index);
-      var p = document.createElement("button");
-      p.onclick = function() {
-        send_card(nom);
-      }
-      p.innerText = nom;
-      div.appendChild(p);
+      div.setAttribute('id', nom);
+      // var p = document.createElement("button");
+      // p.onclick = function() {
+      //   send_card(nom);
+      // }
+      div.innerText = nom;
+      // div.appendChild(p);
       stack.append(div);
     }
 
