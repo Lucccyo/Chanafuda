@@ -97,18 +97,18 @@ var distribution = function (r) {
 
   r.set_stack(Card.init(r));
 
-  // console.log("p1 : ", r.get_p1().get_id());
-  // Player.display_tab(r.get_p1().get_hand());
+  console.log("p1 : ", r.get_p1().get_id());
+  Player.display_tab(r.get_p1().get_hand());
 
-  // console.log("");
+  console.log("");
 
-  // console.log("board : ", r.get_id_room());
-  // Player.display_tab(r.get_board());
+  console.log("board : ", r.get_id_room());
+  Player.display_tab(r.get_board());
 
-  // console.log("")
+  console.log("")
 
-  // console.log("p2 : ", r.get_p2().get_id())
-  // Player.display_tab(r.get_p2().get_hand());
+  console.log("p2 : ", r.get_p2().get_id())
+  Player.display_tab(r.get_p2().get_hand());
 }
 
 

@@ -3,6 +3,7 @@ class Player {
     is_p1;
     hand;
     depository;
+    his_room;
     constructor(id) {
         this.id = id;
         this.hand = new Array();

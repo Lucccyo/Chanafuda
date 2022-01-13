@@ -70,73 +70,30 @@ class Card {
     //cards are distributed 2 by 2
     var j = 0;
 
-    for (var i = 0; i < 4; i++) {
-      Card.move_card(stack[j], stack, hand_p1);
-      Card.move_card(stack[j + 1], stack, hand_p1);
-      Card.move_card(stack[j + 2], stack, board);
-      Card.move_card(stack[j + 3], stack, board);
-      Card.move_card(stack[j + 4], stack, hand_p2);
-      Card.move_card(stack[j + 5], stack, hand_p2);
-
-      j += 6;
+    for(let i = 0 ; i < 24 ; i++) {
+      let j = (i % 6) >> 1;
+      Card.move_card(stack[i], stack, j == 0 ? hand_p1 : j == 1 ? board : hand_p2);
     }
+
+    // for (let i = 0; i < 4; i++) {
+    //   Card.move_card(stack[j + 0], stack, hand_p1);
+    //   Card.move_card(stack[j + 1], stack, hand_p1);
+    //   Card.move_card(stack[j + 2], stack, board);
+    //   Card.move_card(stack[j + 3], stack, board);
+    //   Card.move_card(stack[j + 4], stack, hand_p2);
+    //   Card.move_card(stack[j + 5], stack, hand_p2);
+
+    //   j += 6;
+    // }
   }
 
   static need_shake(board) {
 
     let m = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
+    // let n;
     for (let i = 0; i < board.length; i++) {
-      switch (board[i].get_month()) {
-        case '01': m[0]++; if (m[0] >= 3) {
-          return true;
-        }
-          break;
-        case '02': m[1]++; if (m[1] >= 3) {
-          return true;
-        }
-          break;
-        case '03': m[2]++; if (m[2] >= 3) {
-          return true;
-        }
-          break;
-        case '04': m[3]++; if (m[3] >= 3) {
-          return true;
-        }
-          break;
-        case '05': m[4]++; if (m[4] >= 3) {
-          return true;
-        }
-          break;
-        case '06': m[5]++; if (m[5] >= 3) {
-          return true;
-        }
-          break;
-        case '07': m[6]++; if (m[6] >= 3) {
-          return true;
-        }
-          break;
-        case '08': m[7]++; if (m[7] >= 3) {
-          return true;
-        }
-          break;
-        case '09': m[8]++; if (m[8] >= 3) {
-          return true;
-        }
-          break;
-        case '10': m[9]++; if (m[9] >= 3) {
-          return true;
-        }
-          break;
-        case '11': m[10]++; if (m[10] >= 3) {
-          return true;
-        }
-          break;
-        case '12': m[11]++; if (m[11] >= 3) {
-          return true;
-        }
-          break;
-      }
+      let n = board[i].get_month() - 1;
+      m[n]++; if (m[n] >= 3) return true;
     }
     return false;
   }
@@ -154,7 +111,6 @@ class Card {
     new Card('02', '02', public_stack);
     new Card('02', 'RP', public_stack);
     new Card('02', 'A0', public_stack);
-
 
     // March, public_stack
     new Card('03', '01', public_stack);
