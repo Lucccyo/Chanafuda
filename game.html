@@ -27,11 +27,12 @@
     }
 
     .carte {
-      height: 100px;
+      height: 117px;
       width: 70px;
       margin: 5px;
       background-color: rgb(136, 113, 82);
     }
+    
 
     .main {
       display: flex;
@@ -126,6 +127,7 @@
     var perso_stack = document.getElementById('perso');
     var board_top = document.getElementById('board_top');
     var board_bot = document.getElementById('board_bot');
+
 
     socket.on('perso', function (tab) {
       perso_stack.innerHTML = '';

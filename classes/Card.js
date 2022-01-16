@@ -26,16 +26,17 @@ class Card {
     return ("----");
   }
 
-  static clone(obj) {
-    if (null == obj || "object" != typeof obj) return obj;
-    var copy = obj.constructor();
-    for (var attr in obj) {
-      if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
-    }
-    return copy;
-  }
+  // static clone(obj) {
+  //   if (null == obj || "object" != typeof obj) return obj;
+  //   var copy = obj.constructor();
+  //   for (var attr in obj) {
+  //     if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+  //   }
+  //   return copy;
+  // }
 
   static shuffle(s) {
+
     for (let i = 0; i < Card.SIZE; i++) {
       let rand = Math.floor(Math.random() * Card.SIZE);
       let temp = s[i];
@@ -43,6 +44,7 @@ class Card {
       s[rand] = temp;
     }
     return s;
+    
   }
 
   static display(tab) {
