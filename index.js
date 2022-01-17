@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
   }
 
   socket.on('disconnect', () => {
-    
+
     console.log(socket.id, ' disconnected');
   });
 });
@@ -122,7 +122,9 @@ var distribution = function (r) {
 
 
 io.on('connection', (socket) => {
-  socket.on('first_part', (card_name) => {
+
+
+  socket.on('turn', (card_name) => {
     // on retrouver le joueur grace a l'id de sa socket
     let p;
     let cpt = 0;
@@ -134,29 +136,36 @@ io.on('connection', (socket) => {
       cpt++;
     }
 
-    let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
-    if (c == -1) {
-      console.log("You are cheating");
-      return 2;
-    }
+    if (p.get_id() == p.get_his_room().get_turn()) {
+      // dans get_turn il y a l'id du joueur qui doit jouer, en commmencant par p1
+      let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
+      if (c == -1) {
+        console.log("You are cheating");
+        return 2;
+      }
 
-    let tab_matchs = p.get_his_room().match(c);
-    switch (tab_matchs.length) {
-      case 0:
-        Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
-        console.log("carte -> board car aucun appairage possible.");
-        etat_du_jeu(p, p.get_his_mate(), 'turn', null)
-        break;
-      case 1:
-        console.log("Un appairage possible --> automatique");
-        Card.move_card(c, p.get_hand(), p.get_depository());
-        Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
-        etat_du_jeu(p, p.get_his_mate(), 'turn', null);
-        break;
-      case 2:
-
-        etat_du_jeu(p, p.get_his_mate(), 'choice', tab_matchs)
-        break;
+      let tab_matchs = p.get_his_room().match(c);
+      switch (tab_matchs.length) {
+        case 0:
+          Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
+          console.log("carte -> board car aucun appairage possible.");
+          etat_du_jeu(p, p.get_his_mate(), 'turn', null)
+          break;
+        case 1:
+          console.log("Un appairage possible --> automatique");
+          Card.move_card(c, p.get_hand(), p.get_depository());
+          Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
+          etat_du_jeu(p, p.get_his_mate(), 'turn', null);
+          break;
+        case 2:
+          console.log("Deux appairages possible --> le joueur doit choisir");
+          etat_du_jeu(p, p.get_his_mate(), 'choice', tab_matchs);
+          break;
+      }
     }
+  });
+
+  socket.on('choice', (card_name) => {
+
   });
 });

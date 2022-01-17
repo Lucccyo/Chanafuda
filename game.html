@@ -164,7 +164,12 @@
         let div = document.getElementById(tab[i])
         var p = document.createElement("button");
         p.onclick = function () {
-          send_card(tab[i]);
+          if(((p.parentElement).parentElement).id == 'board') {
+            send_card_choice(tab[i]);
+          } else {
+            send_card_turn(tab[i]);
+          }
+          
         }
         div.appendChild(p);
       }
@@ -194,10 +199,16 @@
     }
 
 
-    function send_card(card_n) {
+    function send_card_turn(card_n) {
       // envoie de la carte cliquée
-      socket.emit('first_part', card_n);
+      socket.emit('turn', card_n);
     }
+
+    function send_card_choice(card_n) {
+      // envoie de la carte cliquée
+      socket.emit('choice', card_n);
+    }
+    
 
   </script>
 </body>

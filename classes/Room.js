@@ -1,5 +1,4 @@
 const Card = require("./Card");
-
 class Room {
   NB_MAX = 2;
   stack;
@@ -8,7 +7,9 @@ class Room {
   name;
   is_locked = false;
   board;
+  turn;
 
+  
   card_sent_fp;
   turn_lock = false;
 
@@ -19,6 +20,11 @@ class Room {
     this.name = name;
     this.stack = Card.shuffle(Array.from(Card.get_sort_stack()));
     this.board = new Array();
+    this.turn = p1.get_id();
+  }
+
+  get_turn() {
+    return this.turn;
   }
 
   add_p2(p2) {
@@ -51,21 +57,20 @@ class Room {
     return this.stack;
   }
 
-  turn_fp(player, card_name) {
-
-      this.set_card_sent_fp(card_name);
-
-  }
+  // turn_fp(player, card_name) {
+  //     this.set_card_sent_fp(card_name);
+  // }
 
 
   set_card_sent_fp(card) {
-      this.card_sent_fp = card;
-    this.turn_lock = true;
+    this.card_sent_fp = card;
+    // this.turn_lock = true;
   }
 
   init_fp(player, card_name) {
     this.set_card_sent_fp(card_name);
     return this.contain(player.get_hand(), card_name);
+    //retourne l'objet carte si elle se trouve bien dans la main du joueur
   }
 
   match(card) {
@@ -75,6 +80,7 @@ class Room {
         match_cards.push(this.get_board()[i]);
       }
     }
+    //renvoir un tableau comprenant les cartes qui correspondent sur le board au mois de la carte choisie
     return match_cards;
   }
 
