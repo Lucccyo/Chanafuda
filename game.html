@@ -164,12 +164,15 @@
         let div = document.getElementById(tab[i])
         var p = document.createElement("button");
         p.onclick = function () {
-          if(((p.parentElement).parentElement).id == 'board') {
-            send_card_choice(tab[i]);
-          } else {
+          console.log("node : " + (div.parentNode).id);
+          console.log(tab[i]);
+          if(((div.parentNode).id) == 'perso') {
             send_card_turn(tab[i]);
+            console.log("main");
+          } else {
+            console.log("board");
+            send_card_choice(tab[i]);
           }
-          
         }
         div.appendChild(p);
       }
@@ -204,9 +207,9 @@
       socket.emit('turn', card_n);
     }
 
-    function send_card_choice(card_n) {
+    function send_card_choice(card_choose) {
       // envoie de la carte cliquée
-      socket.emit('choice', card_n);
+      socket.emit('choice', card_choose);
     }
     
 

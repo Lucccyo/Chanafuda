@@ -7,7 +7,7 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const { distribute } = require('./classes/Card.js');
+const { distribute, move_card } = require('./classes/Card.js');
 const { match } = require('assert');
 const io = new Server(server);
 
@@ -87,6 +87,8 @@ function etat_du_jeu(player, enemy, flag, tab_match) {
       break;
     case 'choice': io.to(player.get_id()).emit('playable', construct_name_tab(tab_match));
       break;
+    case 'show' : io.to(player.get_id()).emit('playable', null);
+    break;
   }
 
 }
@@ -138,34 +140,59 @@ io.on('connection', (socket) => {
 
     if (p.get_id() == p.get_his_room().get_turn()) {
       // dans get_turn il y a l'id du joueur qui doit jouer, en commmencant par p1
-      let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
-      if (c == -1) {
-        console.log("You are cheating");
-        return 2;
-      }
-
-      let tab_matchs = p.get_his_room().match(c);
-      switch (tab_matchs.length) {
-        case 0:
-          Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
-          console.log("carte -> board car aucun appairage possible.");
-          etat_du_jeu(p, p.get_his_mate(), 'turn', null)
-          break;
-        case 1:
-          console.log("Un appairage possible --> automatique");
-          Card.move_card(c, p.get_hand(), p.get_depository());
-          Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
-          etat_du_jeu(p, p.get_his_mate(), 'turn', null);
-          break;
-        case 2:
-          console.log("Deux appairages possible --> le joueur doit choisir");
-          etat_du_jeu(p, p.get_his_mate(), 'choice', tab_matchs);
-          break;
-      }
+      first_part(p, card_name);
+    } else {
+      console.log("Ce n'est pas votre tour !");
     }
   });
 
-  socket.on('choice', (card_name) => {
+  function first_part(p, card_name) {
+    // p est le joueur actif
+    let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
+    if (c == -1) {
+      console.log("Cette carte ne fais pas parti de votre main");
+      return 2;
+    }
 
+    let tab_matchs = p.get_his_room().match(c);
+    switch (tab_matchs.length) {
+      case 0:
+        Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
+        console.log("carte -> board car aucun appairage possible.");
+        etat_du_jeu(p, p.get_his_mate(), 'turn', null)
+        second_part(p);
+        break;
+      case 1:
+        console.log("Un appairage possible --> automatique");
+        Card.move_card(c, p.get_hand(), p.get_depository());
+        Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
+        etat_du_jeu(p, p.get_his_mate(), 'turn', null);
+        second_part(p);
+        break;
+      case 2:
+        console.log("Deux appairages possible --> le joueur doit choisir");
+        etat_du_jeu(p, p.get_his_mate(), 'choice', tab_matchs);
+        Card.move_card(c, p.get_hand(), p.get_depository());
+        // on bouge la carte apres avoir update le visuel, car les deux cartes doivent aller ensemble dans le depot
+        break;
+    }
+  }
+
+  function second_part(p) {
+    console.log("Second part of the turn");
+  }
+
+  socket.on('choice', (card_name) => {
+    console.log(card_name);
+    let c = p.get_his_room().contain(p.get_his_room().get_board(), card_name); // retourne l'objet carte si la carte est bien sur le board, -1 sinon.
+    if (c == -1) {
+      console.log("Cette carte ne fais pas parti du board");
+      return 2;
+    }
+
+    console.log("Joueur a choisi la carte" + card_name + " --> automatique");
+    Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
+    etat_du_jeu(p, p.get_his_mate(), 'show', null);
+    second_part(p);
   });
 });
