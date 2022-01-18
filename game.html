@@ -93,7 +93,7 @@
       </div>
     </div>
     <div class="bloc" id="mid">
-      <div class="carte tas"></div>
+      <div class="carte tas" id="tas"></div>
       <div class="board">
         <div class="top rangee" id="board_top">
 
@@ -127,7 +127,11 @@
     var perso_stack = document.getElementById('perso');
     var board_top = document.getElementById('board_top');
     var board_bot = document.getElementById('board_bot');
+    var tas = document.getElementById('tas');
 
+    socket.on('draw', function (card_name) {
+      tas.textContent = card_name;
+    });
 
     socket.on('perso', function (tab) {
       perso_stack.innerHTML = '';
@@ -209,7 +213,14 @@
 
     function send_card_choice(card_choose) {
       // envoie de la carte cliquée
-      socket.emit('choice', card_choose);
+      if(tas.textContent == null) {
+        tab = ['h', card_choose];
+        socket.emit('choice', tab);
+      } else {
+        tab = ['s', card_choose];
+        socket.emit('choice', tab);
+      }
+      
     }
     
 

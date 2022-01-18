@@ -66,12 +66,12 @@ var start = function (r) {
   p1 = r.get_p1();
   p2 = r.get_p2();
   distribution(r);
-  etat_du_jeu(p1, p2, 'turn', null);
+  etat_du_jeu(p1, p2, 'turn', null, null);
 }
 
 
-function etat_du_jeu(player, enemy, flag, tab_match) {
-
+function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
+  
   io.to(player.get_id()).emit('perso', construct_name_tab(player.get_hand()));
   io.to(player.get_id()).emit('enemy', enemy.get_hand().length);
   io.to(player.get_id()).emit('board', construct_name_tab(player.get_his_room().get_board()));
@@ -87,8 +87,11 @@ function etat_du_jeu(player, enemy, flag, tab_match) {
       break;
     case 'choice': io.to(player.get_id()).emit('playable', construct_name_tab(tab_match));
       break;
-    case 'show' : io.to(player.get_id()).emit('playable', null);
-    break;
+    // case 'show': io.to(player.get_id()).emit('playable', null);
+    //   break;
+    case 'draw': io.to(player.get_id()).emit('draw', card_drawn);
+      io.to(enemy.get_id()).emit('draw', card_drawn);
+      break;
   }
 
 }
@@ -159,19 +162,19 @@ io.on('connection', (socket) => {
       case 0:
         Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
         console.log("carte -> board car aucun appairage possible.");
-        etat_du_jeu(p, p.get_his_mate(), 'show', null)
+        etat_du_jeu(p, p.get_his_mate(), 'show', null, null)
         second_part(p);
         break;
       case 1:
         console.log("Un appairage possible --> automatique");
         Card.move_card(c, p.get_hand(), p.get_depository());
         Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
-        etat_du_jeu(p, p.get_his_mate(), 'show', null);
+        etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
         second_part(p);
         break;
       case 2:
         console.log("Deux appairages possible --> le joueur doit choisir");
-        etat_du_jeu(p, p.get_his_mate(), 'choice', tab_matchs);
+        etat_du_jeu(p, p.get_his_mate(), 'choice', tab_matchs, null);
         Card.move_card(c, p.get_hand(), p.get_depository());
         // on bouge la carte apres avoir update le visuel, car les deux cartes doivent aller ensemble dans le depot
         break;
@@ -180,19 +183,56 @@ io.on('connection', (socket) => {
 
   function second_part(p) {
     console.log("Second part of the turn");
+    let card_drawn = p.get_his_room().get_stack()[0];
+    console.log('vous avez pioché : ' + card_drawn.get_name());
+    etat_du_jeu(p, p.get_his_mate(), 'draw', null, card_drawn.get_name());
+
+
+    let tab_matchs = p.get_his_room().match(card_drawn);
+    switch (tab_matchs.length) {
+      case 0:
+        Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_his_room().get_board());
+        console.log("carte piochée -> board car aucun appairage possible.");
+        etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+        console.log("FIN DU TOUR");
+        break;
+      case 1:
+        console.log("Un appairage possible --> automatique");
+        Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_depository());
+        Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
+        etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+        console.log("FIN DU TOUR");
+        break;
+      case 2:
+        console.log("Deux appairages possible --> le joueur doit choisir");
+        etat_du_jeu(p, p.get_his_mate(), 'choice', tab_matchs, null);
+        Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_depository());
+        // on bouge la carte apres avoir update le visuel, car les deux cartes doivent aller ensemble dans le depot
+        break;
+    }
   }
 
-  socket.on('choice', (card_name) => {
-    console.log(card_name);
-    let c = p.get_his_room().contain(p.get_his_room().get_board(), card_name); // retourne l'objet carte si la carte est bien sur le board, -1 sinon.
+  socket.on('choice', (tab) => {
+    // tab[0] => flag card origin : 'h' for hand 's' for stack
+    // tab[1] => card_name
+
+    console.log(tab[1]);
+    let c = p.get_his_room().contain(p.get_his_room().get_board(), tab[1]); // retourne l'objet carte si la carte est bien sur le board, -1 sinon.
     if (c == -1) {
       console.log("Cette carte ne fais pas parti du board");
       return 2;
     }
 
-    console.log("Joueur a choisi la carte" + card_name + " --> automatique");
-    Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
-    etat_du_jeu(p, p.get_his_mate(), 'show', null);
-    second_part(p);
+    if (tab[0] == 'h') {
+      console.log("Joueur a choisi la carte" + tab[1] + " --> automatique");
+      Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
+      etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+      second_part(p);
+    } else {
+      console.log("Joueur a choisi la carte" + tab[1] + " --> automatique");
+      Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
+      etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+      console.log("FIN DU TOUR");
+    }
   });
 });
