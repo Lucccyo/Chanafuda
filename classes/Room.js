@@ -1,5 +1,4 @@
 const Card = require("./Card");
-const Stack_test = require('./stack_scripts_test.js')
 
 class Room {
   NB_MAX = 2;
@@ -19,8 +18,8 @@ class Room {
     this.p1 = p1;
     this.p1.set_p1(true);
     this.name = name;
-    this.stack = Card.shuffle(Array.from(Card.get_sort_stack()));
-    // this.stack = Stack_test.script_cards();
+    this.stack = Array.from(Card.get_sort_stack());
+    // this.stack = Card.shuffle(Array.from(Card.get_sort_stack()));
     this.board = new Array();
     this.turn = p1.get_id();
   }

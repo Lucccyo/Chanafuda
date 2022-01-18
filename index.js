@@ -2,9 +2,6 @@ const Room = require('./classes/Room.js')
 const Player = require('./classes/Player.js')
 const Card = require('./classes/Card.js')
 
-
-const Stack_test = require('./classes/stack_scripts_test.js')
-
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -29,7 +26,7 @@ app.get('/', (req, res) => {
 var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
-  Card.script_cards();
+  Card.script1_cards();
 });
 
 
@@ -43,6 +40,7 @@ io.on('connection', (socket) => {
   // give him a gameroom
   if (room_temp == null) {
     r = new Room(nb_room, p);
+
     p.go_to_room(r);
     // display where he is
     console.log(socket.id, ' on room n° ', p.get_his_room().get_id_room());

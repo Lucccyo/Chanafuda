@@ -26,15 +26,6 @@ class Card {
     return ("----");
   }
 
-  // static clone(obj) {
-  //   if (null == obj || "object" != typeof obj) return obj;
-  //   var copy = obj.constructor();
-  //   for (var attr in obj) {
-  //     if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
-  //   }
-  //   return copy;
-  // }
-
   static shuffle(s) {
 
     for (let i = 0; i < Card.SIZE; i++) {
@@ -44,7 +35,7 @@ class Card {
       s[rand] = temp;
     }
     return s;
-    
+
   }
 
   static display(tab) {
@@ -60,6 +51,7 @@ class Card {
     // end : Card[]
 
     // delete the card from start stack
+    // console.log("MOVE : " + card.get_name());
     start.splice(start.indexOf(card), 1);
     // add the card at the end of end stack
     end.push(card);
@@ -71,7 +63,6 @@ class Card {
     // board : Card[]
 
     //cards are distributed 2 by 2
-
     for (let i = 0; i < 24; i++) {
       let j = (i % 6) >> 1;
       Card.move_card(stack[i], stack, j == 0 ? hand_p1 : j == 1 ? board : hand_p2);
@@ -163,6 +154,79 @@ class Card {
     new Card('12', '03');
     new Card('12', 'BD');
   }
+
+
+  static script1_cards() {
+
+    new Card('07', 'RR');
+    new Card('09', 'RV');
+    
+    new Card('11', 'BR'); // board
+    new Card('03', 'RP'); // board
+    
+    new Card('05', 'RR');
+    // new Card('09', 'RV');
+    new Card('12', 'BD');
+    
+    
+    new Card('04', 'RR');
+    new Card('10', 'RV');
+    
+    new Card('09', 'AW'); // board
+    new Card('03', '02'); // board
+    
+    new Card('06', 'RV');
+    new Card('08', 'A0');
+    
+    
+    
+    new Card('06', '02');
+    new Card('08', '02');
+    
+    new Card('11', 'RR'); // board
+    new Card('10', 'AS'); // board
+    
+    new Card('05', '02');
+    new Card('04', '02');
+    
+    
+    new Card('02', 'A0');
+    new Card('01', 'RP');
+    
+    new Card('04', '01'); // board
+    new Card('07', '02'); // board
+    
+    new Card('02', 'RP');
+    new Card('12', '03');
+    
+
+    new Card('03', 'BC'); // card draw
+
+    new Card('12', '01'); // stack
+    new Card('12', '02');
+    new Card('01', '01');
+    new Card('01', '02');
+    new Card('01', 'BB');
+    new Card('02', '01');
+    new Card('02', '02');
+    new Card('03', '01');
+    new Card('04', 'A0');
+    new Card('05', '01');
+    new Card('05', 'A0');
+    new Card('06', '01');    
+    new Card('06', 'AC');
+    new Card('07', '01');        
+    new Card('07', 'AI');
+    new Card('08', '01');
+    new Card('08', 'BM');
+    new Card('09', '01');
+    new Card('09', '02');
+    new Card('10', '01');
+    new Card('10', '02');
+    new Card('11', '01');
+    new Card('11', 'A0');
+  }
+
 
   static init(r) {
     // departure
