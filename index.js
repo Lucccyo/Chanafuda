@@ -27,6 +27,7 @@ var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
   Card.script1_cards();
+  // Card.script_cards();
 });
 
 
@@ -88,8 +89,8 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
       break;
     case 'choice': io.to(player.get_id()).emit('playable', construct_name_tab(tab_match));
       break;
-    // case 'show': io.to(player.get_id()).emit('playable', null);
-    //   break;
+    case 'show': io.to(player.get_id()).emit('playable', null);
+      break;
     case 'draw': io.to(player.get_id()).emit('draw', card_drawn);
       io.to(enemy.get_id()).emit('draw', card_drawn);
       break;
@@ -225,12 +226,12 @@ io.on('connection', (socket) => {
     }
 
     if (tab[0] == 'h') {
-      console.log("Joueur a choisi la carte" + tab[1] + " --> automatique");
+      console.log("HAND Joueur a choisi la carte" + tab[1] + " --> automatique");
       Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
       etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
       second_part(p);
     } else {
-      console.log("Joueur a choisi la carte" + tab[1] + " --> automatique");
+      console.log("PILE Joueur a choisi la carte" + tab[1] + " --> automatique");
       Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
       etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
       console.log("FIN DU TOUR");

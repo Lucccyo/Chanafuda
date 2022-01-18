@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="style/style.css">
   <style>
     body {
-      background-color: rgb(230, 222, 212);
+      /* background-color: rgb(230, 222, 212); */
+      background-image: url('/img/hanafudraw_complet.png');
       margin: 0;
     }
 
@@ -168,13 +169,10 @@
         let div = document.getElementById(tab[i])
         var p = document.createElement("button");
         p.onclick = function () {
-          console.log("node : " + (div.parentNode).id);
-          console.log(tab[i]);
+
           if(((div.parentNode).id) == 'perso') {
             send_card_turn(tab[i]);
-            console.log("main");
           } else {
-            console.log("board");
             send_card_choice(tab[i]);
           }
         }
