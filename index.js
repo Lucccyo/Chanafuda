@@ -159,14 +159,14 @@ io.on('connection', (socket) => {
       case 0:
         Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
         console.log("carte -> board car aucun appairage possible.");
-        etat_du_jeu(p, p.get_his_mate(), 'turn', null)
+        etat_du_jeu(p, p.get_his_mate(), 'show', null)
         second_part(p);
         break;
       case 1:
         console.log("Un appairage possible --> automatique");
         Card.move_card(c, p.get_hand(), p.get_depository());
         Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
-        etat_du_jeu(p, p.get_his_mate(), 'turn', null);
+        etat_du_jeu(p, p.get_his_mate(), 'show', null);
         second_part(p);
         break;
       case 2:
