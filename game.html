@@ -5,11 +5,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style/style.css">
   <style>
     body {
-      /* background-color: rgb(230, 222, 212); */
-      background-image: url('/img/hanafudraw_complet.png');
+      background-color: rgb(230, 222, 212);
+      /* background-image: url('/img/hanafudraw_complet.png'); */
       margin: 0;
     }
 
@@ -33,7 +32,6 @@
       margin: 5px;
       background-color: rgb(136, 113, 82);
     }
-    
 
     .main {
       display: flex;
@@ -124,16 +122,14 @@
 
   <script>
     var socket = io();
+
     var enemy_stack = document.getElementById('enemy');
     var perso_stack = document.getElementById('perso');
     var board_top = document.getElementById('board_top');
     var board_bot = document.getElementById('board_bot');
     var tas = document.getElementById('tas');
 
-    socket.on('draw', function (card_name) {
-      tas.textContent = card_name;
-    });
-
+// my cards
     socket.on('perso', function (tab) {
       perso_stack.innerHTML = '';
       for (let i = 0; i < tab.length; i++) {
@@ -141,6 +137,17 @@
       }
     });
 
+    function add_card(nom, stack) {
+      var div = document.createElement("div");
+      div.classList.add('carte');
+      div.setAttribute('id', nom);
+      div.innerText = nom;
+      stack.append(div);
+    }
+// *******
+
+
+// enemy cards
     socket.on('enemy', function (nb_card) {
       enemy_stack.innerHTML = '';
       for (let i = 0; i < nb_card; i++) {
@@ -148,6 +155,15 @@
       }
     });
 
+    function add_enemy_card() {
+      var div = document.createElement("div");
+      div.classList.add('carte');
+      enemy_stack.append(div);
+    }
+// *******
+
+
+// shared cards
     socket.on('board', function (tab) {
       board_bot.innerHTML = '';
       board_top.innerHTML = '';
@@ -160,17 +176,25 @@
       }
     });
 
-    socket.on('pile', function (nb_card) {
-      console.log("Dans la pile, il y a " + nb_card + " cartes.");
-    });
+    function add_board_card(nom, stack, index) {
+      var div = document.createElement("div");
+      div.classList.add('carte');
+      div.setAttribute('id', index);
+      div.setAttribute('id', nom);
+      div.innerText = nom;
+      stack.append(div);
+    }
+// *******
 
+
+// playable cards
     socket.on('playable', function (tab) {
       for (let i = 0; i < tab.length; i++) {
         let div = document.getElementById(tab[i])
         var p = document.createElement("button");
         p.onclick = function () {
 
-          if(((div.parentNode).id) == 'perso') {
+          if (((div.parentNode).id) == 'perso') {
             send_card_turn(tab[i]);
           } else {
             send_card_choice(tab[i]);
@@ -180,30 +204,6 @@
       }
     });
 
-    function add_enemy_card() {
-      var div = document.createElement("div");
-      div.classList.add('carte');
-      enemy_stack.append(div);
-    }
-
-    function add_card(nom, stack) {
-      var div = document.createElement("div");
-      div.classList.add('carte');
-      div.setAttribute('id', nom);
-      div.innerText = nom;
-      stack.append(div);
-    }
-
-    function add_board_card(nom, stack, index) {
-      var div = document.createElement("div");
-      div.classList.add('carte');
-      div.setAttribute('id', index);
-      div.setAttribute('id', nom);
-      div.innerText = nom;
-      stack.append(div);
-    }
-
-
     function send_card_turn(card_n) {
       // envoie de la carte cliquée
       socket.emit('turn', card_n);
@@ -211,17 +211,35 @@
 
     function send_card_choice(card_choose) {
       // envoie de la carte cliquée
-      if(tas.textContent == null) {
+      if (tas.textContent == null) {
         tab = ['h', card_choose];
         socket.emit('choice', tab);
       } else {
         tab = ['s', card_choose];
         socket.emit('choice', tab);
       }
-      
     }
-    
+// *******
 
+
+// number of cards in stack
+    socket.on('pile', function (nb_card) {
+      console.log("Dans la pile, il y a " + nb_card + " cartes.");
+    });
+// *******
+
+
+// display wich card is drawn
+    socket.on('draw', function (card_name) {
+      if (card_name == 'v') {
+        tas.textContent = 'qsdqsdqsd';
+        console.log(card_name);
+      } else {
+        tas.textContent = card_name;
+        console.log(card_name);
+      }
+    });
+// *******
   </script>
 </body>
 

@@ -2,6 +2,7 @@ const Room = require('./classes/Room.js')
 const Player = require('./classes/Player.js')
 const Card = require('./classes/Card.js')
 
+
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -21,6 +22,8 @@ let players = [];
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/game.html');
 });
+// *******
+
 
 // waiting clients
 var public_stack = new Array();
@@ -29,11 +32,11 @@ server.listen(3000, () => {
   Card.script1_cards();
   // Card.script_cards();
 });
+// *******
 
 
 // new connection
 io.on('connection', (socket) => {
-
   p = new Player(socket.id);
   players.push(p);
   console.log(p.get_id(), ' connected');
@@ -41,9 +44,7 @@ io.on('connection', (socket) => {
   // give him a gameroom
   if (room_temp == null) {
     r = new Room(nb_room, p);
-
     p.go_to_room(r);
-    // display where he is
     console.log(socket.id, ' on room n° ', p.get_his_room().get_id_room());
     room_temp = r;
     nb_room++;
@@ -51,7 +52,6 @@ io.on('connection', (socket) => {
     room_temp.add_p2(p);
     p.go_to_room(room_temp);
     //game starts
-    // display where he is
     console.log(socket.id, ' on room n° ', p.get_his_room().get_id_room());
     start(room_temp);
     room_temp = null;
@@ -62,18 +62,11 @@ io.on('connection', (socket) => {
     console.log(socket.id, ' disconnected');
   });
 });
+// *******
 
 
-var start = function (r) {
-  p1 = r.get_p1();
-  p2 = r.get_p2();
-  distribution(r);
-  etat_du_jeu(p1, p2, 'turn', null, null);
-}
-
-
+// sockets events to update the game
 function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
-
   io.to(player.get_id()).emit('perso', construct_name_tab(player.get_hand()));
   io.to(player.get_id()).emit('enemy', enemy.get_hand().length);
   io.to(player.get_id()).emit('board', construct_name_tab(player.get_his_room().get_board()));
@@ -89,15 +82,13 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
       break;
     case 'choice': io.to(player.get_id()).emit('playable', construct_name_tab(tab_match));
       break;
-    case 'show': io.to(player.get_id()).emit('playable', null);
+    case 'show': io.to(player.get_id()).emit('draw', 'v');
       break;
     case 'draw': io.to(player.get_id()).emit('draw', card_drawn);
       io.to(enemy.get_id()).emit('draw', card_drawn);
       break;
   }
-
 }
-
 
 function construct_name_tab(card_tab) {
   var tab_name = [];
@@ -106,13 +97,25 @@ function construct_name_tab(card_tab) {
   }
   return tab_name;
 }
+// *******
 
+
+
+// GAME FONCTIONNMENT
+// initial set
+var start = function (r) {
+  p1 = r.get_p1();
+  p2 = r.get_p2();
+  distribution(r);
+  etat_du_jeu(p1, p2, 'turn', null, null);
+}
 
 var distribution = function (r) {
   console.log("Distribution...")
 
   Card.init(r);
 
+  // display set in the term
   console.log("p1 : ", r.get_p1().get_id());
   Player.display_tab(r.get_p1().get_hand());
 
@@ -126,11 +129,12 @@ var distribution = function (r) {
   console.log("p2 : ", r.get_p2().get_id())
   Player.display_tab(r.get_p2().get_hand());
 }
+// *******
 
 
+
+// turn of p
 io.on('connection', (socket) => {
-
-
   socket.on('turn', (card_name) => {
     // on retrouver le joueur grace a l'id de sa socket
     let p;
@@ -142,7 +146,6 @@ io.on('connection', (socket) => {
       }
       cpt++;
     }
-
     if (p.get_id() == p.get_his_room().get_turn()) {
       // dans get_turn il y a l'id du joueur qui doit jouer, en commmencant par p1
       first_part(p, card_name);
@@ -151,6 +154,8 @@ io.on('connection', (socket) => {
     }
   });
 
+
+  // first part of the turn
   function first_part(p, card_name) {
     // p est le joueur actif
     let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
@@ -182,13 +187,15 @@ io.on('connection', (socket) => {
         break;
     }
   }
+  // *******
 
+
+  // second part of the turn
   function second_part(p) {
     console.log("Second part of the turn");
     let card_drawn = p.get_his_room().get_stack()[0];
     console.log('vous avez pioché : ' + card_drawn.get_name());
     etat_du_jeu(p, p.get_his_mate(), 'draw', null, card_drawn.get_name());
-
 
     let tab_matchs = p.get_his_room().match(card_drawn);
     switch (tab_matchs.length) {
@@ -213,7 +220,10 @@ io.on('connection', (socket) => {
         break;
     }
   }
+  // *******
 
+
+  // choice event : the player must choose between two cards on the board
   socket.on('choice', (tab) => {
     // tab[0] => flag card origin : 'h' for hand 's' for stack
     // tab[1] => card_name
@@ -224,7 +234,6 @@ io.on('connection', (socket) => {
       console.log("Cette carte ne fais pas parti du board");
       return 2;
     }
-
     if (tab[0] == 'h') {
       console.log("HAND Joueur a choisi la carte" + tab[1] + " --> automatique");
       Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
@@ -237,4 +246,6 @@ io.on('connection', (socket) => {
       console.log("FIN DU TOUR");
     }
   });
+  // *******
 });
+// *******

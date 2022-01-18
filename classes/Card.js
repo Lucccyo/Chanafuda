@@ -10,6 +10,7 @@ class Card {
     Card.sort_stack.push(this);
   }
 
+  // getters
   static get_sort_stack() {
     return Card.sort_stack;
   }
@@ -21,13 +22,21 @@ class Card {
   get_name() {
     return this.month.concat('', this.type);
   }
+  // *******
 
-  get_name_hidden() {
-    return ("----");
+
+  // display function
+  static display(tab) {
+    console.log(tab.length);
+    for (let i = 0; i < tab.length; i++) {
+      console.log(tab[i]);
+    }
   }
+  // *******
 
+
+  // shuffle card function
   static shuffle(s) {
-
     for (let i = 0; i < Card.SIZE; i++) {
       let rand = Math.floor(Math.random() * Card.SIZE);
       let temp = s[i];
@@ -35,26 +44,32 @@ class Card {
       s[rand] = temp;
     }
     return s;
-
   }
+  // *******
 
-  static display(tab) {
-    console.log(tab.length);
-    for (let i = 0; i < tab.length; i++) {
-      console.log(tab[i]);
+
+  // initialisation start of a turn
+  static init(r) {
+    // departure
+    let stack = r.get_stack();
+    // arrival
+    let hand_p1 = r.get_p1().get_hand();
+    let hand_p2 = r.get_p2().get_hand();
+    let board = r.get_board();
+    while (1) {
+      hand_p1.length = 0;
+      hand_p2.length = 0;
+      board.length = 0;
+
+      Card.distribute(stack, hand_p1, hand_p2, board);
+
+      if (!Card.need_shake(board)) {
+        return stack;
+      }
+      console.log("REDISTRIB");
+      stack.length = 0;
+      stack = Card.shuffle(Array.from(Card.get_sort_stack()));
     }
-  }
-
-  static move_card(card, start, end) {
-    // card : Card
-    // start : Card[]
-    // end : Card[]
-
-    // delete the card from start stack
-    // console.log("MOVE : " + card.get_name());
-    start.splice(start.indexOf(card), 1);
-    // add the card at the end of end stack
-    end.push(card);
   }
 
   static distribute(stack, hand_p1, hand_p2, board) {
@@ -67,11 +82,21 @@ class Card {
       let j = (i % 6) >> 1;
       Card.move_card(stack[i], stack, j == 0 ? hand_p1 : j == 1 ? board : hand_p2);
     }
+  }
 
+  static move_card(card, start, end) {
+    // card : Card
+    // start : Card[]
+    // end : Card[]
+
+    // delete the card from start stack
+    // console.log("CARD MOVE : " + card.get_name());
+    start.splice(start.indexOf(card), 1);
+    // add the card at the end of end stack
+    end.push(card);
   }
 
   static need_shake(board) {
-
     let m = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     for (let i = 0; i < board.length; i++) {
       let n = board[i].get_month() - 1;
@@ -79,9 +104,13 @@ class Card {
     }
     return false;
   }
+  // *******
 
+
+  // initialisation of cards
+
+  // original script
   static script_cards() {
-
     // January
     new Card('01', '01');
     new Card('01', '02');
@@ -154,11 +183,10 @@ class Card {
     new Card('12', '03');
     new Card('12', 'BD');
   }
-
+  // *******
 
   static script1_cards() {
     // script for car drawn choice
-
     new Card('07', 'RR'); // p1
     new Card('03', 'BC'); // card draw
     new Card('09', 'RV'); // p1
@@ -192,9 +220,9 @@ class Card {
     new Card('10', 'AS'); // board
     new Card('08', 'BM');
     new Card('05', '02'); // p2
-    new Card('07', '01');   
+    new Card('07', '01');
     new Card('04', '02'); // p2
-    new Card('06', '01'); 
+    new Card('06', '01');
     new Card('02', 'A0'); // p1
     new Card('10', '02');
     new Card('01', 'RP'); // p1
@@ -207,34 +235,8 @@ class Card {
     new Card('01', '02');
     new Card('12', '03'); // p2
   }
-
-
-  static init(r) {
-    // departure
-    let stack = r.get_stack();
-
-    // arrival
-    let hand_p1 = r.get_p1().get_hand();
-    let hand_p2 = r.get_p2().get_hand();
-    let board = r.get_board();
-    while (1) {
-      hand_p1.length = 0;
-      hand_p2.length = 0;
-      board.length = 0;
-
-      Card.distribute(stack, hand_p1, hand_p2, board);
-
-      if (!Card.need_shake(board)) {
-        return stack;
-      }
-      console.log("REDISTRIB");
-      stack.length = 0;
-      stack = Card.shuffle(Array.from(Card.get_sort_stack()));
-
-    }
-  }
+  // *******
 }
-
 
 module.exports = Card
 
