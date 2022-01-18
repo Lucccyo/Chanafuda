@@ -12,7 +12,7 @@ const { distribute, move_card } = require('./classes/Card.js');
 const { match } = require('assert');
 const io = new Server(server);
 
-
+app.use(express.static('./img'));
 let nb_room = 0;
 let room_temp = null;
 let players = [];
@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
-  Card.script1_cards();
+  Card.script2_cards();
   // Card.script_cards();
 });
 // *******
@@ -228,7 +228,7 @@ io.on('connection', (socket) => {
     // tab[0] => flag card origin : 'h' for hand 's' for stack
     // tab[1] => card_name
 
-    console.log(tab[1]);
+    console.log("FLAG = " + tab[1]);
     let c = p.get_his_room().contain(p.get_his_room().get_board(), tab[1]); // retourne l'objet carte si la carte est bien sur le board, -1 sinon.
     if (c == -1) {
       console.log("Cette carte ne fais pas parti du board");

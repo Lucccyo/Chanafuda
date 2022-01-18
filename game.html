@@ -8,7 +8,7 @@
   <style>
     body {
       background-color: rgb(230, 222, 212);
-      /* background-image: url('/img/hanafudraw_complet.png'); */
+      /* background-image: url('/hanafudraw_complet.png'); */
       margin: 0;
     }
 
@@ -31,6 +31,8 @@
       width: 70px;
       margin: 5px;
       background-color: rgb(136, 113, 82);
+      background-image: url('/hanafudraw_complete_edited.png');
+      background-position: 0px 0;
     }
 
     .main {
@@ -75,6 +77,7 @@
 </head>
 
 <body>
+  <!-- <img src="./petit.png" alt=""> -->
   <div class="game">
     <div class="bloc" id="top">
       <div class="left demi" id="enemy">
@@ -211,13 +214,13 @@
 
     function send_card_choice(card_choose) {
       // envoie de la carte cliquée
-      if (tas.textContent == null) {
-        tab = ['h', card_choose];
-        socket.emit('choice', tab);
-      } else {
+      // if (tas.textContent == null) {
+      //   tab = ['h', card_choose];
+      //   socket.emit('choice', tab);
+      // } else {
         tab = ['s', card_choose];
         socket.emit('choice', tab);
-      }
+      // }
     }
 // *******
 
