@@ -71,7 +71,6 @@ class Card {
     // board : Card[]
 
     //cards are distributed 2 by 2
-    var j = 0;
 
     for (let i = 0; i < 24; i++) {
       let j = (i % 6) >> 1;

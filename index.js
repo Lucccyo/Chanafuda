@@ -2,6 +2,9 @@ const Room = require('./classes/Room.js')
 const Player = require('./classes/Player.js')
 const Card = require('./classes/Card.js')
 
+
+const Stack_test = require('./classes/stack_scripts_test.js')
+
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -71,7 +74,7 @@ var start = function (r) {
 
 
 function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
-  
+
   io.to(player.get_id()).emit('perso', construct_name_tab(player.get_hand()));
   io.to(player.get_id()).emit('enemy', enemy.get_hand().length);
   io.to(player.get_id()).emit('board', construct_name_tab(player.get_his_room().get_board()));
