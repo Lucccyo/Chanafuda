@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
-  Card.script1_cards();
+  Card.script_cards();
   // Card.script_cards();
 });
 // *******
@@ -154,9 +154,10 @@ io.on('connection', (socket) => {
     }
   });
 
-
+  var in_fp;
   // first part of the turn
   function first_part(p, card_name) {
+    in_fp = true;
     // p est le joueur actif
     let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
     if (c == -1) {
@@ -183,7 +184,6 @@ io.on('connection', (socket) => {
         console.log("Deux appairages possible --> le joueur doit choisir");
         etat_du_jeu(p, p.get_his_mate(), 'choice', tab_matchs, null);
         Card.move_card(c, p.get_hand(), p.get_depository());
-        // on bouge la carte apres avoir update le visuel, car les deux cartes doivent aller ensemble dans le depot
         break;
     }
   }
@@ -192,6 +192,7 @@ io.on('connection', (socket) => {
 
   // second part of the turn
   function second_part(p) {
+    in_fp = false;
     console.log("Second part of the turn");
     let card_drawn = p.get_his_room().get_stack()[0];
     console.log('vous avez pioché : ' + card_drawn.get_name());
@@ -224,23 +225,21 @@ io.on('connection', (socket) => {
 
 
   // choice event : the player must choose between two cards on the board
-  socket.on('choice', (tab) => {
-    // tab[0] => flag card origin : 'h' for hand 's' for stack
-    // tab[1] => card_name
+  socket.on('choice', (card_name) => {
 
-    console.log("FLAG = " + tab[1]);
-    let c = p.get_his_room().contain(p.get_his_room().get_board(), tab[1]); // retourne l'objet carte si la carte est bien sur le board, -1 sinon.
+    console.log("In first part : " + in_fp);
+    let c = p.get_his_room().contain(p.get_his_room().get_board(), card_name); // retourne l'objet carte si la carte est bien sur le board, -1 sinon.
     if (c == -1) {
       console.log("Cette carte ne fais pas parti du board");
       return 2;
     }
-    if (tab[0] == 'h') {
-      console.log("HAND Joueur a choisi la carte" + tab[1] + " --> automatique");
+    if (in_fp) {
+      console.log("HAND Joueur a choisi la carte" + card_name + " --> automatique");
       Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
       etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
       second_part(p);
     } else {
-      console.log("PILE Joueur a choisi la carte" + tab[1] + " --> automatique");
+      console.log("PILE Joueur a choisi la carte" + card_name + " --> automatique");
       Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
       etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
       console.log("FIN DU TOUR");

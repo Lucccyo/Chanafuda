@@ -83,191 +83,191 @@
     }
     
     #c0102 {
-      background-position: 0px 0;
+      background-position: -80px 0;
     }
     
     #c01RP {
-      background-position: 0px 0;
+      background-position: -160px 0;
     }
     
     #c01BB {
-      background-position: 0px 0;
+      background-position: -240px 0;
     }
     
     #c0201 {
-      background-position: 0px 0;
+      background-position: 0px -127px;
     }
     
     #c0202 {
-      background-position: 0px 0;
+      background-position: -80px -127px;
     }
     
     #c02RP {
-      background-position: 0px 0;
+      background-position: -160px -127px;
     }
     
     #c02A0 {
-      background-position: 0px 0;
+      background-position: -240px -127px;
     }
     
     #c0301 {
-      background-position: 0px 0;
+      background-position: 0px -254px;
     }
     
     #c0302 {
-      background-position: 0px 0;
+      background-position: -80px -254px;
     }
     
     #c03RP {
-      background-position: 0px 0;
+      background-position: -160px -254px;
     }
     
     #c03BC {
-      background-position: 0px 0;
+      background-position: -240px -254px;
     }
     
     #c0401 {
-      background-position: 200px 0;
+      background-position: 0px -381px;
     }
     
     #c0402 {
-      background-position: 0px 0;
+      background-position: -80px -381px;
     }
     
     #c04RR {
-      background-position: 0px 0;
+      background-position: -160px -381px;
     }
     
     #c04A0 {
-      background-position: 0px 0;
+      background-position: -240px -381px;
     }
     
     #c0501 {
-      background-position: 0px 0;
+      background-position: 0px -508px;
     }
     
     #c0502 {
-      background-position: 0px 0;
+      background-position: -80px -508px;
     }
     
     #c05RR {
-      background-position: 0px 0;
+      background-position: -160px -508px;
     }
     
     #c05A0 {
-      background-position: 0px 0;
+      background-position: -240px -508px;
     }
     
     #c0601 {
-      background-position: 0px 0;
+      background-position: 0px -635px;
     }
     
     #c0602 {
-      background-position: 0px 0;
+      background-position: -80px -635px;
     }
     
     #c06RV {
-      background-position: 0px 0;
+      background-position: -160px -635px;
     }
     
     #c06AC {
-      background-position: 0px 0;
+      background-position: -240px -635px;
     }
     
     #c0701 {
-      background-position: 0px 0;
+      background-position: 0px -762px;
     }
     
     #c0702 {
-      background-position: 0px 0;
+      background-position: -80px -762px;
     }
     
     #c07RR {
-      background-position: 0px 0;
+      background-position: -160px -762px;
     }
     
     #c07AI {
-      background-position: 0px 0;
+      background-position: -240px -762px;
     }
     
     #c0801 {
-      background-position: 0px 0;
+      background-position: 0px -889px;
     }
     
     #c0802 {
-      background-position: 0px 0;
+      background-position: -80px -889px;
     }
     
     #c08A0 {
-      background-position: 0px 0;
+      background-position: -160px -889px;
     }
     
     #c08BM {
-      background-position: 0px 0;
+      background-position: -240px -889px;
     }
     
     #c0901 {
-      background-position: 0px 0;
+      background-position: 0px -1016px;
     }
     
     #c0902 {
-      background-position: 0px 0;
+      background-position: -80px -1016px;
     }
     
     #c09RV {
-      background-position: 0px 0;
+      background-position: -160px -1016px;
     }
     
     #c09AW {
-      background-position: 0px 0;
+      background-position: -240px -1016px;
     }
     
     #c1001 {
-      background-position: 0px 0;
+      background-position: 0px -1143px;
     }
     
     #c1002 {
-      background-position: 0px 0;
+      background-position: -80px -1143px;
     }
     
     #c10RV {
-      background-position: 0px 0;
+      background-position: -160px -1143px;
     }
     
     #c10AS {
-      background-position: 0px 0;
+      background-position: -240px -1143px;
     }
     
     #c1101 {
-      background-position: 0px 0;
+      background-position: 0px -1270px;
     }
     
     #c11RR {
-      background-position: 0px 0;
+      background-position: -80px -1270px;
     }
     
     #c11A0 {
-      background-position: 0px 0;
+      background-position: -160px -1270px;
     }
     
     #c11BR {
-      background-position: 0px 0;
+      background-position: -240px -1270px;
     }
     
     #c1201 {
-      background-position: 0px 0;
+      background-position: 0px -1397px;
     }
     
     #c1202 {
-      background-position: 0px 0;
+      background-position: -80px -1397px;
     }
     
     #c1203 {
-      background-position: 0px 0;
+      background-position: -160px -1397px;
     }
     
     #c12BD {
-      background-position: 0px 0;
+      background-position: -240px -1397px;
     }
     
   </style>
@@ -417,13 +417,7 @@
 
     function send_card_choice(card_choose) {
       // envoie de la carte cliquée
-      // if (tas.textContent == null) {
-      //   tab = ['h', card_choose];
-      //   socket.emit('choice', tab);
-      // } else {
-      tab = ['s', card_choose];
-      socket.emit('choice', tab);
-      // }
+      socket.emit('choice', card_choose);
     }
     // *******
 
