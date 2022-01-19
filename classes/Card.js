@@ -69,6 +69,8 @@ class Card {
       console.log("REDISTRIB");
       stack.length = 0;
       stack = Card.shuffle(Array.from(Card.get_sort_stack()));
+      console.log("Nouveau stack mélangé :");
+      Card.display(stack);
     }
   }
 
@@ -234,6 +236,7 @@ class Card {
     new Card('02', 'RP'); // p2
     new Card('01', '02');
     new Card('12', '03'); // p2
+    new Card('12', '02');
   }
 
   static script2_cards() {
@@ -287,6 +290,61 @@ class Card {
     new Card('02', 'RP'); // p2
     new Card('01', '02');
     new Card('12', '03'); // p2
+    new Card('12', '02');
+  }
+
+  static script3_cards() {
+    // script wich need to re shuffle
+
+    //use : choose your 07 card and you are going to be able to make a choice on the board
+    new Card('07', 'RR'); // p1
+    new Card('03', 'BC'); // card draw
+    new Card('09', 'RV'); // p1
+    new Card('02', '02');
+    new Card('11', 'BR'); // board
+    new Card('06', 'AC');
+    new Card('07', 'AI'); // board
+    new Card('03', 'RP'); 
+    new Card('05', 'RR'); // p2
+    new Card('02', '01');
+    new Card('12', 'BD'); // p2
+    new Card('05', 'A0');
+    new Card('04', 'RR'); // p1
+    new Card('09', '01');
+    new Card('10', 'RV'); // p1
+    new Card('09', '02');
+    new Card('09', 'AW'); // board
+    new Card('04', 'A0');
+    new Card('03', '02'); // board
+    new Card('08', '01');
+    new Card('06', 'RV'); // p2
+    new Card('01', 'BB');
+    new Card('08', 'A0'); // p2
+    new Card('11', 'A0');
+    new Card('06', '02'); // p1
+    new Card('01', '01');
+    new Card('08', '02'); // p1
+    new Card('03', '01');
+    new Card('11', 'RR'); // board
+    new Card('05', '01');
+    new Card('07', '01'); // board
+    new Card('10', 'AS'); 
+    new Card('08', 'BM'); // p2
+    new Card('05', '02');
+    new Card('04', '02'); // p2
+    new Card('06', '01');
+    new Card('02', 'A0'); // p1
+    new Card('10', '02');
+    new Card('01', 'RP'); // p1
+    new Card('10', '01');
+    new Card('04', '01'); // board
+    new Card('11', '01');
+    new Card('07', '02'); // board
+    new Card('12', '01');
+    new Card('02', 'RP'); // p2
+    new Card('01', '02');
+    new Card('12', '03'); // p2
+    new Card('12', '02');
   }
   // *******
 }
