@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
-  Card.script2_cards();
+  Card.script_cards();
   // Card.script_cards();
 });
 // *******
@@ -73,11 +73,15 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
   io.to(player.get_id()).emit('enemy', enemy.get_hand().length);
   io.to(player.get_id()).emit('board', construct_name_tab(player.get_his_room().get_board()));
   io.to(player.get_id()).emit('pile', player.get_his_room().get_stack().length);
+  io.to(player.get_id()).emit('depo_perso', construct_name_tab(player.get_depository()));
+
 
   io.to(enemy.get_id()).emit('perso', construct_name_tab(enemy.get_hand()));
   io.to(enemy.get_id()).emit('enemy', player.get_hand().length);
   io.to(enemy.get_id()).emit('board', construct_name_tab(player.get_his_room().get_board()));
   io.to(enemy.get_id()).emit('pile', player.get_his_room().get_stack().length);
+  io.to(enemy.get_id()).emit('depo_enemy', construct_name_tab(player.get_depository()));
+
 
   switch (flag) {
     case 'turn': console.log(player.get_id()); io.to(player.get_id()).emit('playable', construct_name_tab(player.get_hand()));
@@ -138,6 +142,7 @@ var distribution = function (r) {
 // turn of p
 io.on('connection', (socket) => {
   socket.on('turn', (card_name) => {
+    
     // on retrouver le joueur grace a l'id de sa socket
     let p;
     let cpt = 0;
@@ -148,9 +153,10 @@ io.on('connection', (socket) => {
       }
       cpt++;
     }
+    Player.display_tab(p.get_his_room().get_stack());
     // if (p.get_id() == p.get_his_room().get_turn()) {
-      // dans get_turn il y a l'id du joueur qui doit jouer, en commmencant par p1
-      first_part(p, card_name);
+    // dans get_turn il y a l'id du joueur qui doit jouer, en commmencant par p1
+    first_part(p, card_name);
     // } else {
     //   console.log("Ce n'est pas votre tour !");
     // }

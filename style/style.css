@@ -45,6 +45,7 @@ body {
 
   .right .carte {
     background-color: rgb(233, 210, 182);
+    margin: 0;
   }
 
   #mid .board {
@@ -271,4 +272,45 @@ body {
   
   #c12BD {
     background-position: 0px -1397px;
+  }
+
+  .right {
+    justify-content: flex-end;
+    margin-bottom: 25px;
+  }
+
+  .depo_card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .plain_depo {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-bottom: 10px;
+  }
+
+  .types_depo {
+    display: flex;
+  }
+
+  .type {
+    margin-left: 20px;
+  }
+
+  .ribbons {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .animals {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .brights {
+    display: flex;
+    flex-direction: row-reverse;
   }
