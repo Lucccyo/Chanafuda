@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
-  Card.script2_cards();
+  Card.script1_cards();
   // Card.script_cards();
 });
 // *******

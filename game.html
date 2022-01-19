@@ -31,8 +31,11 @@
       width: 70px;
       margin: 5px;
       background-color: rgb(136, 113, 82);
+      /* background-position: 0px 0; */
+    }
+
+    .v {
       background-image: url('/hanafudraw_complete_edited.png');
-      background-position: 0px 0;
     }
 
     .main {
@@ -71,6 +74,202 @@
       height: 100%;
       background-color: rgba(136, 113, 82, 0);
     }
+
+
+
+
+    #c0101 {
+      background-position: 0px 0;
+    }
+    
+    #c0102 {
+      background-position: 0px 0;
+    }
+    
+    #c01RP {
+      background-position: 0px 0;
+    }
+    
+    #c01BB {
+      background-position: 0px 0;
+    }
+    
+    #c0201 {
+      background-position: 0px 0;
+    }
+    
+    #c0202 {
+      background-position: 0px 0;
+    }
+    
+    #c02RP {
+      background-position: 0px 0;
+    }
+    
+    #c02A0 {
+      background-position: 0px 0;
+    }
+    
+    #c0301 {
+      background-position: 0px 0;
+    }
+    
+    #c0302 {
+      background-position: 0px 0;
+    }
+    
+    #c03RP {
+      background-position: 0px 0;
+    }
+    
+    #c03BC {
+      background-position: 0px 0;
+    }
+    
+    #c0401 {
+      background-position: 200px 0;
+    }
+    
+    #c0402 {
+      background-position: 0px 0;
+    }
+    
+    #c04RR {
+      background-position: 0px 0;
+    }
+    
+    #c04A0 {
+      background-position: 0px 0;
+    }
+    
+    #c0501 {
+      background-position: 0px 0;
+    }
+    
+    #c0502 {
+      background-position: 0px 0;
+    }
+    
+    #c05RR {
+      background-position: 0px 0;
+    }
+    
+    #c05A0 {
+      background-position: 0px 0;
+    }
+    
+    #c0601 {
+      background-position: 0px 0;
+    }
+    
+    #c0602 {
+      background-position: 0px 0;
+    }
+    
+    #c06RV {
+      background-position: 0px 0;
+    }
+    
+    #c06AC {
+      background-position: 0px 0;
+    }
+    
+    #c0701 {
+      background-position: 0px 0;
+    }
+    
+    #c0702 {
+      background-position: 0px 0;
+    }
+    
+    #c07RR {
+      background-position: 0px 0;
+    }
+    
+    #c07AI {
+      background-position: 0px 0;
+    }
+    
+    #c0801 {
+      background-position: 0px 0;
+    }
+    
+    #c0802 {
+      background-position: 0px 0;
+    }
+    
+    #c08A0 {
+      background-position: 0px 0;
+    }
+    
+    #c08BM {
+      background-position: 0px 0;
+    }
+    
+    #c0901 {
+      background-position: 0px 0;
+    }
+    
+    #c0902 {
+      background-position: 0px 0;
+    }
+    
+    #c09RV {
+      background-position: 0px 0;
+    }
+    
+    #c09AW {
+      background-position: 0px 0;
+    }
+    
+    #c1001 {
+      background-position: 0px 0;
+    }
+    
+    #c1002 {
+      background-position: 0px 0;
+    }
+    
+    #c10RV {
+      background-position: 0px 0;
+    }
+    
+    #c10AS {
+      background-position: 0px 0;
+    }
+    
+    #c1101 {
+      background-position: 0px 0;
+    }
+    
+    #c11RR {
+      background-position: 0px 0;
+    }
+    
+    #c11A0 {
+      background-position: 0px 0;
+    }
+    
+    #c11BR {
+      background-position: 0px 0;
+    }
+    
+    #c1201 {
+      background-position: 0px 0;
+    }
+    
+    #c1202 {
+      background-position: 0px 0;
+    }
+    
+    #c1203 {
+      background-position: 0px 0;
+    }
+    
+    #c12BD {
+      background-position: 0px 0;
+    }
+    
   </style>
   <script src="/socket.io/socket.io.js"></script>
   <title>Hanafuda</title>
@@ -132,7 +331,7 @@
     var board_bot = document.getElementById('board_bot');
     var tas = document.getElementById('tas');
 
-// my cards
+    // my cards
     socket.on('perso', function (tab) {
       perso_stack.innerHTML = '';
       for (let i = 0; i < tab.length; i++) {
@@ -143,14 +342,16 @@
     function add_card(nom, stack) {
       var div = document.createElement("div");
       div.classList.add('carte');
-      div.setAttribute('id', nom);
+      div.classList.add('v');
+      card_name = 'c'.concat('', nom);
+      div.setAttribute('id', card_name);
       div.innerText = nom;
       stack.append(div);
     }
-// *******
+    // *******
 
 
-// enemy cards
+    // enemy cards
     socket.on('enemy', function (nb_card) {
       enemy_stack.innerHTML = '';
       for (let i = 0; i < nb_card; i++) {
@@ -163,10 +364,10 @@
       div.classList.add('carte');
       enemy_stack.append(div);
     }
-// *******
+    // *******
 
 
-// shared cards
+    // board cards
     socket.on('board', function (tab) {
       board_bot.innerHTML = '';
       board_top.innerHTML = '';
@@ -182,18 +383,20 @@
     function add_board_card(nom, stack, index) {
       var div = document.createElement("div");
       div.classList.add('carte');
+      div.classList.add('v');
       div.setAttribute('id', index);
-      div.setAttribute('id', nom);
+      card_name = 'c'.concat('', nom);
+      div.setAttribute('id', card_name);
       div.innerText = nom;
       stack.append(div);
     }
-// *******
+    // *******
 
 
-// playable cards
+    // playable cards
     socket.on('playable', function (tab) {
       for (let i = 0; i < tab.length; i++) {
-        let div = document.getElementById(tab[i])
+        var div = document.getElementById('c'.concat('', tab[i]))
         var p = document.createElement("button");
         p.onclick = function () {
 
@@ -218,24 +421,24 @@
       //   tab = ['h', card_choose];
       //   socket.emit('choice', tab);
       // } else {
-        tab = ['s', card_choose];
-        socket.emit('choice', tab);
+      tab = ['s', card_choose];
+      socket.emit('choice', tab);
       // }
     }
-// *******
+    // *******
 
 
-// number of cards in stack
+    // number of cards in stack
     socket.on('pile', function (nb_card) {
       console.log("Dans la pile, il y a " + nb_card + " cartes.");
     });
-// *******
+    // *******
 
 
-// display wich card is drawn
+    // display wich card is drawn
     socket.on('draw', function (card_name) {
       if (card_name == 'v') {
-        tas.textContent = 'qsdqsdqsd';
+        tas.textContent = '';
         console.log(card_name);
       } else {
         tas.textContent = card_name;
