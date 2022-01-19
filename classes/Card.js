@@ -66,11 +66,9 @@ class Card {
       if (!Card.need_shake(board)) {
         return stack;
       }
-      console.log("REDISTRIB");
+      console.log("-- Redistribution");
       stack.length = 0;
       stack = Card.shuffle(Array.from(Card.get_sort_stack()));
-      console.log("Nouveau stack mélangé :");
-      Card.display(stack);
     }
   }
 

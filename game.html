@@ -7,27 +7,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/style.css">
   <script src="/socket.io/socket.io.js"></script>
-  <!-- <script src="/script.js"></script>
-   -->
   <title>Hanafuda</title>
 </head>
 
 <body>
-  <!-- <img src="./petit.png" alt=""> -->
   <div class="game">
     <div class="bloc" id="top">
       <div class="left demi" id="enemy">
 
       </div>
       <div class="right demi">
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
+        <div class="depo_card">
+          <div class="plain_depo" id="plain_depo_e">
+          </div>
+          <div class="types_depo">
+            <div class="ribbons type" id="rib_depo_e">
+            </div>
+            <div class="animals type" id="animal_depo_e">
+            </div>
+            <div class="brights type" id="bright_depo_e">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="bloc" id="mid">
@@ -48,40 +49,16 @@
       <div class="right demi">
         <div class="depo_card">
           <div class="plain_depo" id="plain_depo_p">
-            <!-- <div class="carte depo"></div>
-            <div class="carte depo"></div>
-            <div class="carte depo"></div>
-            <div class="carte depo"></div>
-            <div class="carte depo"></div>
-            <div class="carte depo"></div>
-            <div class="carte depo"></div> -->
           </div>
           <div class="types_depo">
             <div class="ribbons type" id="rib_depo_p">
-              <!-- <div class="carte depo"></div>
-              <div class="carte depo"></div>
-              <div class="carte depo"></div> -->
             </div>
             <div class="animals type" id="animal_depo_p">
-              <!-- <div class="carte depo"></div>
-              <div class="carte depo"></div>
-              <div class="carte depo"></div> -->
             </div>
             <div class="brights type" id="bright_depo_p">
-              <!-- <div class="carte depo"></div>
-              <div class="carte depo"></div>
-              <div class="carte depo"></div> -->
             </div>
           </div>
         </div>
-        <!-- <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div>
-        <div class="carte"></div> -->
       </div>
     </div>
   </div>
@@ -96,10 +73,15 @@
     var board_bot = document.getElementById('board_bot');
     var tas = document.getElementById('tas');
 
-    var plain_depo_p = document.getElementById('plain_depo_p');
-    var rib_depo_p = document.getElementById('rib_depo_p');
+    var plain_depo_p  = document.getElementById('plain_depo_p');
+    var rib_depo_p    = document.getElementById('rib_depo_p');
     var animal_depo_p = document.getElementById('animal_depo_p');
     var bright_depo_p = document.getElementById('bright_depo_p');
+
+    var plain_depo_e  = document.getElementById('plain_depo_e');
+    var rib_depo_e    = document.getElementById('rib_depo_e');
+    var animal_depo_e = document.getElementById('animal_depo_e');
+    var bright_depo_e = document.getElementById('bright_depo_e');
 
     // my cards
     socket.on('perso', function (tab) {
@@ -196,15 +178,14 @@
     // depo cards player
     socket.on('depo_perso', function (tab) {
       // on recoit les cartes enregistré + des nouvelles si update
-      plain_depo_p.innerHTML  = '';
-      rib_depo_p.innerHTML    = '';
+      plain_depo_p.innerHTML = '';
+      rib_depo_p.innerHTML = '';
       animal_depo_p.innerHTML = '';
       bright_depo_p.innerHTML = '';
-      var cpt_p = 0;
-      var cpt_r = 0;
-      var cpt_a = 0;
-      var cpt_b = 0;
-      // console.log('heyo');
+      let cpt_p = 0;
+      let cpt_r = 0;
+      let cpt_a = 0;
+      let cpt_b = 0;
       for (let i = 0; i < tab.length; i++) {
         switch (tab[i][2]) {
           case '0': add_repo_card(tab[i], cpt_p, plain_depo_p); cpt_p++;
@@ -214,6 +195,30 @@
           case 'A': add_repo_card(tab[i], cpt_a, animal_depo_p); cpt_a++;
             break;
           case 'B': add_repo_card(tab[i], cpt_b, bright_depo_p); cpt_b++;
+            break;
+        }
+      }
+    });
+
+    socket.on('depo_enemy', function (tab) {
+      // on recoit les cartes enregistré + des nouvelles si update
+      plain_depo_e.innerHTML = '';
+      rib_depo_e.innerHTML = '';
+      animal_depo_e.innerHTML = '';
+      bright_depo_e.innerHTML = '';
+      let cpt_p = 0;
+      let cpt_r = 0;
+      let cpt_a = 0;
+      let cpt_b = 0;
+      for (let i = 0; i < tab.length; i++) {
+        switch (tab[i][2]) {
+          case '0': add_repo_card(tab[i], cpt_p, plain_depo_e); cpt_p++;
+            break;
+          case 'R': add_repo_card(tab[i], cpt_r, rib_depo_e); cpt_r++;
+            break;
+          case 'A': add_repo_card(tab[i], cpt_a, animal_depo_e); cpt_a++;
+            break;
+          case 'B': add_repo_card(tab[i], cpt_b, bright_depo_e); cpt_b++;
             break;
         }
       }
