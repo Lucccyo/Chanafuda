@@ -3,11 +3,13 @@ class Player {
   hand;
   depository;
   his_room;
+  points;
 
   constructor(id) {
     this.id = id;
     this.hand = new Array();
     this.depository = new Array();
+    this.points = 0;
   }
 
   go_to_room(room) {

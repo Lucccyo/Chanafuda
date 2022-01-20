@@ -17,7 +17,7 @@
 
       </div>
       <div class="right demi">
-        <div class="depo_card">
+        <div class="depo_card enemy">
           <div class="plain_depo" id="plain_depo_e">
           </div>
           <div class="types_depo">
@@ -178,6 +178,7 @@
     // depo cards player
     socket.on('depo_perso', function (tab) {
       // on recoit les cartes enregistré + des nouvelles si update
+      console.log("MAJ DU REPO PERSO");
       plain_depo_p.innerHTML = '';
       rib_depo_p.innerHTML = '';
       animal_depo_p.innerHTML = '';
@@ -202,6 +203,7 @@
 
     socket.on('depo_enemy', function (tab) {
       // on recoit les cartes enregistré + des nouvelles si update
+      console.log("MAJ DU REPO PERSO");
       plain_depo_e.innerHTML = '';
       rib_depo_e.innerHTML = '';
       animal_depo_e.innerHTML = '';

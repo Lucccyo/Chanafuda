@@ -71,13 +71,14 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
   io.to(player.get_id()).emit('board', construct_name_tab(player.get_his_room().get_board()));
   io.to(player.get_id()).emit('pile', player.get_his_room().get_stack().length);
   io.to(player.get_id()).emit('depo_perso', construct_name_tab(player.get_depository()));
-
+  io.to(player.get_id()).emit('depo_enemy', construct_name_tab(enemy.get_depository()));
 
   io.to(enemy.get_id()).emit('perso', construct_name_tab(enemy.get_hand()));
   io.to(enemy.get_id()).emit('enemy', player.get_hand().length);
   io.to(enemy.get_id()).emit('board', construct_name_tab(player.get_his_room().get_board()));
   io.to(enemy.get_id()).emit('pile', player.get_his_room().get_stack().length);
   io.to(enemy.get_id()).emit('depo_enemy', construct_name_tab(player.get_depository()));
+  io.to(enemy.get_id()).emit('depo_perso', construct_name_tab(enemy.get_depository()));
 
 
   switch (flag) {
@@ -125,10 +126,11 @@ var distribution = function (r) {
 
 // turn of p
 io.on('connection', (socket) => {
+  let p;
   socket.on('turn', (card_name) => {
 
     // on retrouver le joueur grace a l'id de sa socket
-    let p;
+    
     let cpt = 0;
     while (1) {
       if (players[cpt].get_id() == socket.id) {
@@ -137,14 +139,7 @@ io.on('connection', (socket) => {
       }
       cpt++;
     }
-
-    // Player.display_tab(p.get_his_room().get_stack());
-    // if (p.get_id() == p.get_his_room().get_turn()) {
-    // dans get_turn il y a l'id du joueur qui doit jouer, en commmencant par p1
     first_part(p, card_name);
-    // } else {
-    //   console.log("Ce n'est pas votre tour !");
-    // }
   });
 
   var in_fp;
@@ -201,6 +196,7 @@ io.on('connection', (socket) => {
         Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_his_room().get_board());
         console.log("Aucun appairage possible, " + card_drawn + " va sur le board");
         etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+        console.log("tour_suivant");
         etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
         break;
       case 1:
@@ -208,6 +204,7 @@ io.on('connection', (socket) => {
         Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_depository());
         Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
         etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+        console.log("tour_suivant");
         etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
         break;
       case 2:
@@ -234,31 +231,11 @@ io.on('connection', (socket) => {
       etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
       second_part(p);
     } else {
-      // les id se sont echangés ?! :o
-
-      // console.log('247player actu = ' + p.get_id());
-      // console.log("PILE Joueur a choisi la carte" + card_name + " --> automatique");
-      // Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
-      // etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
-      // console.log("FIN DU TOUR");
-      // console.log('252player id : ' + p.get_id());
-      // console.log('253enemy id : ' + p.get_his_mate().get_id());
-      // etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
-      // console.log("TOUR enemy");
-
-
-
-      // console.log("PILE Joueur a choisi la carte" + card_name + " --> automatique");
-      // Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
-      // etat_du_jeu(p.get_his_mate(), p, 'show', null, null);
-      // console.log("FIN DU TOUR");
-      // etat_du_jeu(p, p.get_his_mate(), 'turn', null, null);
-
       console.log("La carte choisie est : " + card_name);
       Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
-      etat_du_jeu(p.get_his_mate(), p, 'show', null, null);
+      etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+      console.log("tour_suivant");
       etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
-      // tester le bug : script1 et choisir a chaque tour la carte a gauche
     }
   });
   // *******

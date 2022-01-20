@@ -286,6 +286,10 @@ body {
     justify-content: center;
   }
 
+  .enemy {
+    flex-direction: column-reverse;
+  }
+
   .plain_depo {
     display: flex;
     flex-direction: row-reverse;
