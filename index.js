@@ -80,7 +80,6 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
   io.to(enemy.get_id()).emit('depo_enemy', construct_name_tab(player.get_depository()));
   io.to(enemy.get_id()).emit('depo_perso', construct_name_tab(enemy.get_depository()));
 
-
   switch (flag) {
     case 'turn': io.to(player.get_id()).emit('playable', construct_name_tab(player.get_hand()));
       break;
@@ -116,9 +115,8 @@ var start = function (r) {
 }
 
 var distribution = function (r) {
-
   Card.init(r);
-  
+
 }
 // *******
 
@@ -128,9 +126,7 @@ var distribution = function (r) {
 io.on('connection', (socket) => {
   let p;
   socket.on('turn', (card_name) => {
-
     // on retrouver le joueur grace a l'id de sa socket
-    
     let cpt = 0;
     while (1) {
       if (players[cpt].get_id() == socket.id) {
@@ -196,6 +192,7 @@ io.on('connection', (socket) => {
         Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_his_room().get_board());
         console.log("Aucun appairage possible, " + card_drawn + " va sur le board");
         etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+        console.log("points du joueur = " + p.point_analysis());
         console.log("tour_suivant");
         etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
         break;
@@ -204,6 +201,7 @@ io.on('connection', (socket) => {
         Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_depository());
         Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
         etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+        console.log("points du joueur = " + p.point_analysis());
         console.log("tour_suivant");
         etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
         break;
@@ -234,6 +232,7 @@ io.on('connection', (socket) => {
       console.log("La carte choisie est : " + card_name);
       Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
       etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+      console.log("points du joueur = " + p.point_analysis());
       console.log("tour_suivant");
       etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
     }

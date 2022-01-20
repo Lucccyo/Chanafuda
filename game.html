@@ -178,7 +178,6 @@
     // depo cards player
     socket.on('depo_perso', function (tab) {
       // on recoit les cartes enregistré + des nouvelles si update
-      console.log("MAJ DU REPO PERSO");
       plain_depo_p.innerHTML = '';
       rib_depo_p.innerHTML = '';
       animal_depo_p.innerHTML = '';
@@ -203,7 +202,6 @@
 
     socket.on('depo_enemy', function (tab) {
       // on recoit les cartes enregistré + des nouvelles si update
-      console.log("MAJ DU REPO PERSO");
       plain_depo_e.innerHTML = '';
       rib_depo_e.innerHTML = '';
       animal_depo_e.innerHTML = '';
@@ -239,39 +237,6 @@
       parent_div.appendChild(div);
     }
     // *******
-
-
-
-    // // depo cards enemy
-    // socket.on('depo_enemy', function (tab) {
-    //   // on recoit les cartes enregistré + des nouvelles si update
-    //   plain_depo.innerHTML = '';
-    //   var cpt = 0;
-    //   for (let i = 0; i < tab.length; i++) {
-
-    //     let depo = 'perso';
-    //     add_repo_card(tab[i], cpt, depo)
-    //     cpt++;
-    //   }
-    // });
-
-    // function add_repo_card(name, cpt, depo_flag) {
-    //   if (depo_flag == 'perso') {
-
-    //     var div = document.createElement("div");
-    //     div.classList.add('carte');
-    //     div.classList.add('depo');
-    //     div.classList.add('v');
-    //     card_name = 'c'.concat('', name);
-    //     div.setAttribute('id', card_name);
-    //     div.innerText = name;
-    //     div.style.transform = "translateX(" + (cpt * 40) + "px)";
-
-    //     plain_depo.appendChild(div);
-    //   }
-    // }
-    // // *******
-
 
 
     // number of cards in stack
