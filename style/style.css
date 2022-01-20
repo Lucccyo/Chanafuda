@@ -318,3 +318,12 @@ body {
     display: flex;
     flex-direction: row-reverse;
   }
+
+  .points {
+    visibility: hidden;
+    background-color: rgb(153, 130, 95);
+  }
+
+  .points button {
+    cursor: pointer;
+  }
