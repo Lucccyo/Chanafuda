@@ -83,9 +83,10 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
   switch (flag) {
     case 'turn': io.to(player.get_id()).emit('playable', construct_name_tab(player.get_hand()));
       break;
-    case 'choice': io.to(player.get_id()).emit('playable', construct_name_tab(tab_match));
+    case 'choice': console.log('choice  ----------'); io.to(player.get_id()).emit('playable', construct_name_tab(tab_match));
       break;
-    case 'show': io.to(player.get_id()).emit('draw', 'v');
+    case 'show':
+      io.to(player.get_id()).emit('draw', 'v');
       break;
     case 'draw': io.to(player.get_id()).emit('draw', card_drawn);
       io.to(enemy.get_id()).emit('draw', card_drawn);
@@ -135,45 +136,34 @@ io.on('connection', (socket) => {
       }
       cpt++;
     }
-    first_part(p, card_name);
+    let card = p.get_his_room().contain(p.get_hand(), card_name);
+    if (card != -1) first_part(p, card);
+    else console.log("CHEATING");
   });
 
   var in_fp;
   // first part of the turn
-  function first_part(p, card_name) {
+  function first_part(p, card) {
     console.log('');
     console.log("-- Tour de " + p.get_id());
     console.log('- Première partie');
-    console.log('Vous avez choisi la carte ' + card_name);
+    console.log('Vous avez choisi la carte ' + card.get_name());
     in_fp = true;
-    // p est le joueur actif
-    let c = p.get_his_room().init_fp(p, card_name); // retourne l'objet carte si la caret est bien dans la main de player, -1 sinon.
-    if (c == -1) {
-      console.log("Cette carte ne fais pas parti de votre main");
-      return 2;
-    }
+    let r = p.get_his_room();
 
-    let tab_matchs = p.get_his_room().match(c);
-    switch (tab_matchs.length) {
-      case 0:
-        Card.move_card(c, p.get_hand(), p.get_his_room().get_board());
-        console.log("Aucun appairage possible, " + card_name + " va sur le board");
-        etat_du_jeu(p, p.get_his_mate(), 'show', null, null)
-        second_part(p);
-        break;
-      case 1:
-        console.log("Un seul appairage possible, " + card_name + ", et " + tab_matchs[0].get_name() + " vont dans le repo");
-        Card.move_card(c, p.get_hand(), p.get_depository());
-        Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
-        etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
-        second_part(p);
-        break;
-      case 2:
-        console.log("Deux appairages possibles : " + tab_matchs[0].get_name() + ", " + tab_matchs[1].get_name() + " => Le joueur doit choisir");
-        etat_du_jeu(p, p.get_his_mate(), 'choice', tab_matchs, null);
-        Card.move_card(c, p.get_hand(), p.get_depository());
-        break;
+    let a = r.match_analysis(r.match(card), card, p.get_hand(), p);
+    if (a != null) {
+      console.log('hello');
+      etat_du_jeu(p, p.get_his_mate(), 'choice', a, null);
+      console.log('hellooo');
+      Card.move_card(card, p.get_his_room().get_board(), p.get_depository());
+    } else {
+      etat_du_jeu(p, p.get_his_mate(), 'show', null, null)
+      second_part(p);
     }
+    // traite les differents cas et effectue les opérations de mouvements sur les cartes
+
+
   }
   // *******
 
@@ -184,33 +174,20 @@ io.on('connection', (socket) => {
     console.log('- Seconde partie');
     let card_drawn = p.get_his_room().get_stack()[0];
     console.log('Carte piochée : ' + card_drawn.get_name());
+
     etat_du_jeu(p, p.get_his_mate(), 'draw', null, card_drawn.get_name());
 
-    let tab_matchs = p.get_his_room().match(card_drawn);
-    switch (tab_matchs.length) {
-      case 0:
-        Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_his_room().get_board());
-        console.log("Aucun appairage possible, " + card_drawn + " va sur le board");
-        etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
-        console.log("points du joueur = " + p.point_analysis());
-        console.log("tour_suivant");
-        etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
-        break;
-      case 1:
-        console.log("Un seul appairage possible, " + card_drawn + ", et " + tab_matchs[0].get_name() + " vont dans le repo");
-        Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_depository());
-        Card.move_card(tab_matchs[0], p.get_his_room().get_board(), p.get_depository());
-        etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
-        console.log("points du joueur = " + p.point_analysis());
-        console.log("tour_suivant");
-        etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
-        break;
-      case 2:
-        console.log("Deux appairages possibles : " + tab_matchs[0].get_name() + ", " + tab_matchs[1].get_name() + " => Le joueur doit choisir");
-        etat_du_jeu(p, p.get_his_mate(), 'choice', tab_matchs, null);
-        Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_depository());
-        // on bouge la carte apres avoir update le visuel, car les deux cartes doivent aller ensemble dans le depot
-        break;
+    let r = p.get_his_room();
+    let a = r.match_analysis(r.match(card_drawn), card_drawn, r.get_stack(), p);
+    if (a != null) {
+      etat_du_jeu(p, p.get_his_mate(), 'choice', a, null);
+      Card.move_card(card_drawn, p.get_his_room().get_board(), p.get_depository());
+    } else {
+      etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+      console.log("points du joueur = " + p.point_analysis());
+      console.log("tour_suivant");
+
+      etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
     }
   }
   // *******

@@ -7,7 +7,7 @@ class Room {
   name;
   board;
   turn;
-  card_sent_fp;
+  // card_sent_fp;
 
   constructor(name, p1) {
     this.p1 = p1;
@@ -50,15 +50,15 @@ class Room {
   // *******
 
   // start of player turn
-  init_fp(player, card_name) {
-    this.set_card_sent_fp(card_name);
-    return this.contain(player.get_hand(), card_name);
-    //retourne l'objet carte si elle se trouve bien dans la main du joueur
-  }
+  // init_fp(player, card_name) {
+  //   this.set_card_sent_fp(card_name);
+  //   return this.contain(player.get_hand(), card_name);
+  //   //retourne l'objet carte si elle se trouve bien dans la main du joueur
+  // }
 
-  set_card_sent_fp(card) {
-    this.card_sent_fp = card;
-  }
+  // set_card_sent_fp(card) {
+  //   this.card_sent_fp = card;
+  // }
 
   contain(hand, card_n) {
     for (let i = 0; i < hand.length; i++) {
@@ -81,6 +81,23 @@ class Room {
     return match_cards;
   }
   // *******
+
+  match_analysis(tab_matchs, card, start, p) {
+    switch (tab_matchs.length) {
+      case 0:
+        Card.move_card(card, start, p.get_his_room().get_board());
+        console.log("Aucun appairage possible, " + card.get_name() + " va sur le board");
+        break;
+      case 1:
+        console.log("Un seul appairage possible, " + card.get_name() + ", et " + tab_matchs[0].get_name() + " vont dans le repo");
+        Card.move_card(card, start, p.get_depository());
+        Card.move_card(tab_matchs[0], this.get_board(), p.get_depository());
+        break;
+      case 2:
+        console.log("Deux appairages possibles : " + tab_matchs[0].get_name() + ", " + tab_matchs[1].get_name() + " => Le joueur doit choisir");
+        return tab_matchs;
+    }
+  }
 }
 
 module.exports = Room
