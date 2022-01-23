@@ -253,10 +253,14 @@
 
     // display wich card is drawn
     socket.on('draw', function (card_name) {
+      console.log("recu");
+      // let tmp = card_name;
       if (card_name == 'v') {
         tas.textContent = '';
+        tas.classList.remove('v');
       } else {
         tas.textContent = card_name;
+        tas.classList.add('v');
       }
     });
 // *******

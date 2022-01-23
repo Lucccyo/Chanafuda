@@ -2,12 +2,14 @@ class Player {
   id;
   hand;
   depository;
+  points;
   his_room;
 
   constructor(id) {
     this.id = id;
     this.hand = new Array();
     this.depository = new Array();
+    this.points = 0;
   }
 
   go_to_room(room) {
@@ -72,6 +74,13 @@ class Player {
   }
   // *******
 
+  get_points() {
+    return this.points;
+  }
+
+  set_points(points) {
+    this.points = points;
+  }
 
   point_analysis() {
     // console.log("Analysis..................................");

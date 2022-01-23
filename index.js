@@ -31,7 +31,7 @@ var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
   console.log('');
-  Card.script_cards();
+  Card.script2_cards();
 });
 // *******
 
@@ -82,14 +82,17 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
 
   switch (flag) {
     case 'turn': io.to(player.get_id()).emit('playable', construct_name_tab(player.get_hand()));
+      // io.to(player.get_id()).emit('draw', 'v');
+      // io.to(enemy.get_id()).emit('draw', 'v');
       break;
     case 'choice': console.log('choice  ----------'); io.to(player.get_id()).emit('playable', construct_name_tab(tab_match));
       break;
     case 'show':
-      io.to(player.get_id()).emit('draw', 'v');
+      
       break;
-    case 'draw': io.to(player.get_id()).emit('draw', card_drawn);
-      io.to(enemy.get_id()).emit('draw', card_drawn);
+    case 'draw': 
+    // io.to(player.get_id()).emit('draw', card_drawn);
+      // io.to(enemy.get_id()).emit('draw', card_drawn);
       break;
   }
 }
@@ -153,10 +156,8 @@ io.on('connection', (socket) => {
 
     let a = r.match_analysis(r.match(card), card, p.get_hand(), p);
     if (a != null) {
-      console.log('hello');
       etat_du_jeu(p, p.get_his_mate(), 'choice', a, null);
-      console.log('hellooo');
-      Card.move_card(card, p.get_his_room().get_board(), p.get_depository());
+      Card.move_card(card, p.get_hand(), p.get_depository());
     } else {
       etat_du_jeu(p, p.get_his_mate(), 'show', null, null)
       second_part(p);
@@ -181,12 +182,16 @@ io.on('connection', (socket) => {
     let a = r.match_analysis(r.match(card_drawn), card_drawn, r.get_stack(), p);
     if (a != null) {
       etat_du_jeu(p, p.get_his_mate(), 'choice', a, null);
-      Card.move_card(card_drawn, p.get_his_room().get_board(), p.get_depository());
+      Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_depository());
+      
     } else {
       etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
-      console.log("points du joueur = " + p.point_analysis());
+      console.log("points du joueur = " + p.get_points());
+      if(p.get_points() != p.point_analysis()) {
+        console.log('NEW POINTS!!!!!!!');
+        p.set_points(p.point_analysis());
+      }
       console.log("tour_suivant");
-
       etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
     }
   }
@@ -215,5 +220,8 @@ io.on('connection', (socket) => {
     }
   });
   // *******
+
+
 });
+
 // *******
