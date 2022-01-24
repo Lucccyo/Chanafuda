@@ -88,10 +88,10 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
     case 'choice': console.log('choice  ----------'); io.to(player.get_id()).emit('playable', construct_name_tab(tab_match));
       break;
     case 'show':
-      
+
       break;
-    case 'draw': 
-    // io.to(player.get_id()).emit('draw', card_drawn);
+    case 'draw':
+      // io.to(player.get_id()).emit('draw', card_drawn);
       // io.to(enemy.get_id()).emit('draw', card_drawn);
       break;
   }
@@ -183,14 +183,15 @@ io.on('connection', (socket) => {
     if (a != null) {
       etat_du_jeu(p, p.get_his_mate(), 'choice', a, null);
       Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_depository());
-      
+
     } else {
       etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
-      console.log("points du joueur = " + p.get_points());
-      if(p.get_points() != p.point_analysis()) {
-        console.log('NEW POINTS!!!!!!!');
+      if (p.get_points() != p.point_analysis()) {
+        console.log("Points ajoutés : " + (p.point_analysis() - p.get_points()));
         p.set_points(p.point_analysis());
       }
+      console.log("points du joueur = " + p.get_points());
+
       console.log("tour_suivant");
       etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
     }

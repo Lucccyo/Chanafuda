@@ -83,9 +83,7 @@ class Player {
   }
 
   point_analysis() {
-    // console.log("Analysis..................................");
     if (this.depository == null) return 0;
-    // console.log("Analysis.......................non nul");
     let sum = 0;
     let count_plain = 0;
     let count_ribbon = 0;
@@ -130,7 +128,8 @@ class Player {
       if (this.depository[i].get_type()[0] == 'A') {
         count_animal++;
         //Ino Shika Cho
-        if (this.depository[i].get_type()[1] == ('I' || 'S' || 'C')) {
+        let t_a = this.depository[i].get_type()[1];
+        if (t_a == 'I' || t_a ==  'S' || t_a ==  'C') {
           count_ISC++;
           if (count_ISC == 3) contain_ISC = true;
           continue;
@@ -169,7 +168,7 @@ class Player {
     if (count_flowery_sake == 2) sum += 5;
 
     if (count_animal >= 5 && !contain_ISC) sum += count_animal - 4;
-    if (contain_ISC) sum = + 5 + (count_animal - 3);
+    if (contain_ISC) sum =+ 5 + (count_animal - 3);
 
     if (!contain_3poetry && !!contain_3blue && count_ribbon >= 5) sum += count_ribbon - 4;
     if (contain_3poetry && contain_3blue) sum += 10 + (count_ribbon - 6);
