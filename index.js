@@ -82,8 +82,6 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
 
   switch (flag) {
     case 'turn': io.to(player.get_id()).emit('playable', construct_name_tab(player.get_hand()));
-      // io.to(player.get_id()).emit('draw', 'v');
-      // io.to(enemy.get_id()).emit('draw', 'v');
       break;
     case 'choice': console.log('choice  ----------'); io.to(player.get_id()).emit('playable', construct_name_tab(tab_match));
       break;
@@ -91,8 +89,8 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
 
       break;
     case 'draw':
-      // io.to(player.get_id()).emit('draw', card_drawn);
-      // io.to(enemy.get_id()).emit('draw', card_drawn);
+      io.to(player.get_id()).emit('draw', card_drawn);
+      io.to(enemy.get_id()).emit('draw', card_drawn);
       break;
   }
 }
