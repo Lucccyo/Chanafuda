@@ -83,10 +83,7 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
   switch (flag) {
     case 'turn': io.to(player.get_id()).emit('playable', construct_name_tab(player.get_hand()));
       break;
-    case 'choice': console.log('choice  ----------'); io.to(player.get_id()).emit('playable', construct_name_tab(tab_match));
-      break;
-    case 'show':
-
+    case 'choice': io.to(player.get_id()).emit('playable', construct_name_tab(tab_match));
       break;
     case 'draw':
       io.to(player.get_id()).emit('draw', card_drawn);
@@ -157,7 +154,7 @@ io.on('connection', (socket) => {
       etat_du_jeu(p, p.get_his_mate(), 'choice', a, null);
       Card.move_card(card, p.get_hand(), p.get_depository());
     } else {
-      etat_du_jeu(p, p.get_his_mate(), 'show', null, null)
+      etat_du_jeu(p, p.get_his_mate(), null, null, null)
       second_part(p);
     }
     // traite les differents cas et effectue les opérations de mouvements sur les cartes
@@ -183,7 +180,7 @@ io.on('connection', (socket) => {
       Card.move_card(card_drawn, p.get_his_room().get_stack(), p.get_depository());
 
     } else {
-      etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+      etat_du_jeu(p, p.get_his_mate(), null, null, null);
       if (p.get_points() != p.point_analysis()) {
         console.log("Points ajoutés : " + (p.point_analysis() - p.get_points()));
         p.set_points(p.point_analysis());
@@ -207,12 +204,12 @@ io.on('connection', (socket) => {
     if (in_fp) {
       console.log("La carte choisie est : " + card_name);
       Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
-      etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+      etat_du_jeu(p, p.get_his_mate(), null, null, null);
       second_part(p);
     } else {
       console.log("La carte choisie est : " + card_name);
       Card.move_card(c, p.get_his_room().get_board(), p.get_depository());
-      etat_du_jeu(p, p.get_his_mate(), 'show', null, null);
+      etat_du_jeu(p, p.get_his_mate(), null, null, null);
       console.log("points du joueur = " + p.point_analysis());
       console.log("tour_suivant");
       etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
