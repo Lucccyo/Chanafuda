@@ -60,6 +60,7 @@ class Card {
     let hand_p1 = r.get_p1().get_hand();
     let hand_p2 = r.get_p2().get_hand();
     let board = r.get_board();
+    
     while (1) {
       hand_p1.length = 0;
       hand_p2.length = 0;

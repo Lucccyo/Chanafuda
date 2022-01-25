@@ -33,13 +33,13 @@
     </div>
     <div class="bloc" id="mid">
       <div class="carte tas" id="tas"></div>
-      <div class="points">
-        <button>Koi-Koi</button>
-        <button>Finish</button>
+      <div class="points" id="div_btn">
+        <button id="btn_resume">Koi-Koi</button>
+        <button id="btn_finish">Finish</button>
       </div>
       <div class="board">
         <div class="top rangee" id="board_top">
-          
+
 
         </div>
         <div class="bot rangee" id="board_bot">
@@ -78,19 +78,26 @@
     var board_bot = document.getElementById('board_bot');
     var tas = document.getElementById('tas');
 
-    var plain_depo_p  = document.getElementById('plain_depo_p');
-    var rib_depo_p    = document.getElementById('rib_depo_p');
+    var plain_depo_p = document.getElementById('plain_depo_p');
+    var rib_depo_p = document.getElementById('rib_depo_p');
     var animal_depo_p = document.getElementById('animal_depo_p');
     var bright_depo_p = document.getElementById('bright_depo_p');
 
-    var plain_depo_e  = document.getElementById('plain_depo_e');
-    var rib_depo_e    = document.getElementById('rib_depo_e');
+    var plain_depo_e = document.getElementById('plain_depo_e');
+    var rib_depo_e = document.getElementById('rib_depo_e');
     var animal_depo_e = document.getElementById('animal_depo_e');
     var bright_depo_e = document.getElementById('bright_depo_e');
+
+    var div_btn = document.getElementById('div_btn');
+    var btn_resume = document.getElementById('btn_resume');
+    var btn_finish = document.getElementById('btn_finish');
 
     // my cards
     socket.on('perso', function (tab) {
       perso_stack.innerHTML = '';
+      tas.setAttribute('id', '');
+      tas.classList.remove('v');
+      div_btn.style.visibility = "hidden";
       for (let i = 0; i < tab.length; i++) {
         add_card(tab[i], perso_stack);
       }
@@ -253,11 +260,24 @@
 
     // display wich card is drawn
     socket.on('draw', function (card_name) {
-        let name = 'c'.concat('', card_name);
-        tas.setAttribute('id', name);
-        tas.classList.add('v');
+      let name = 'c'.concat('', card_name);
+      tas.setAttribute('id', name);
+      tas.classList.add('v');
     });
-// *******
+    // *******
+    socket.on('points', function (count_points) {
+      div_btn.style.visibility = "visible";
+    });
+
+    btn_resume.addEventListener("click", resume);
+    btn_finish.addEventListener("click", finish);
+
+    function resume() {
+      socket.emit('resume_round');
+    }
+    function finish() {
+      socket.emit('finish_round');
+    }
   </script>
 </body>
 

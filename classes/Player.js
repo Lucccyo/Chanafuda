@@ -4,16 +4,27 @@ class Player {
   depository;
   points;
   his_room;
+  points_game;
 
   constructor(id) {
     this.id = id;
     this.hand = new Array();
     this.depository = new Array();
     this.points = 0;
+    this.points_game = new Array(); 
+  }
+
+  get_points_game() {
+    return this.points_game;
   }
 
   go_to_room(room) {
     this.his_room = room;
+  }
+
+  add_point_game(points) {
+    this.points_game.push(points);
+    this.points = 0;
   }
 
   // display function

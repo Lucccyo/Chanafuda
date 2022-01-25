@@ -7,21 +7,27 @@ class Room {
   name;
   board;
   turn;
+
+  round_month;
   // card_sent_fp;
 
   constructor(name, p1) {
     this.p1 = p1;
     this.name = name;
-    this.stack = Array.from(Card.get_sort_stack());
-    // this.stack = Card.shuffle(Array.from(Card.get_sort_stack()));
+    // this.stack = Array.from(Card.get_sort_stack());
+    this.stack = Card.shuffle(Array.from(Card.get_sort_stack()));
     this.board = new Array();
     this.turn = p1.get_id();
+    this.round_month = 1;
+  }
+
+  init_stack() {
+    this.stack = Array.from(Card.get_sort_stack());
   }
 
   add_p2(p2) {
     this.p2 = p2;
   }
-
 
   // getters
   get_turn() {

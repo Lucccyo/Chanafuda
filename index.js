@@ -31,7 +31,7 @@ var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
   console.log('');
-  Card.script2_cards();
+  Card.script3_cards();
 });
 // *******
 
@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
     console.log(socket.id, ' on room n° ', p.get_his_room().get_id_room());
     console.log('');
     console.log("-- Game start");
-    start(room_temp);
+    start(room_temp, p.get_his_mate());
     room_temp = null;
   }
   socket.on('disconnect', () => {
@@ -92,6 +92,10 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
   }
 }
 
+function new_points(player, count) {
+  io.to(player.get_id()).emit('points', count);
+}
+
 function construct_name_tab(card_tab) {
   var tab_name = [];
   for (var i = 0; i < card_tab.length; i++) {
@@ -105,11 +109,23 @@ function construct_name_tab(card_tab) {
 
 // GAME FONCTIONNMENT
 // initial set
-var start = function (r) {
-  p1 = r.get_p1();
-  p2 = r.get_p2();
+var start = function (r, p1) {
+  // p1 = r.get_p1();
+  // p2 = r.get_p2();
+  p2 = p1.get_his_mate();
+  
   console.log("-- Distribution...");
   distribution(r);
+  
+  console.log("STACK : ");
+  Player.display_tab(r.get_stack());
+  
+  console.log("P1 : ");
+  Player.display_tab(r.get_p1().get_hand());
+
+  console.log("P2 : ");
+  Player.display_tab(r.get_p2().get_hand());
+  
   etat_du_jeu(p1, p2, 'turn', null, null);
 }
 
@@ -184,11 +200,12 @@ io.on('connection', (socket) => {
       if (p.get_points() != p.point_analysis()) {
         console.log("Points ajoutés : " + (p.point_analysis() - p.get_points()));
         p.set_points(p.point_analysis());
+        new_points(p, p.get_points());
+      } else {
+        console.log("tour_suivant");
+        etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
       }
       console.log("points du joueur = " + p.get_points());
-
-      console.log("tour_suivant");
-      etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
     }
   }
   // *******
@@ -217,7 +234,50 @@ io.on('connection', (socket) => {
   });
   // *******
 
+  socket.on('finish_round', () => {
+    // stocker les données de ce round
+    // vider les cartes
+    // mettre en place le round suivant
+    let cpt = 0;
+    while (1) {
+      if (players[cpt].get_id() == socket.id) {
+        p = players[cpt];
+        break;
+      }
+      cpt++;
+    }
+
+    p.add_point_game(p.get_points());
+    p.get_his_mate().add_point_game(0);
+
+    console.log('');
+    console.log('points de ' + p.get_id() + ' : ');
+    Player.display_tab(p.get_points_game());
+
+    console.log('points de ' + p.get_his_mate().get_id() + ' : ');
+    Player.display_tab(p.get_his_mate().get_points_game());
+    console.log('');
+
+    p.get_hand().length = 0;
+    p.get_his_mate().get_hand().length = 0;
+    p.get_his_room().get_board().length = 0;
+    p.get_depository().length = 0;
+    p.get_his_mate().get_depository().length = 0;
+
+    p.get_his_room().init_stack();
+
+    start(p.get_his_room(), p);
+
+  });
+
+  socket.on('resume_round', () => {
+    // stocker le koi koi pour le x2 potentiel
+    // continuer le tour
+    console.log('resume');
+  });
 
 });
+
+
 
 // *******
