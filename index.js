@@ -31,7 +31,7 @@ var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
   console.log('');
-  Card.script3_cards();
+  Card.script_cards();
 });
 // *******
 
@@ -199,11 +199,18 @@ io.on('connection', (socket) => {
       etat_du_jeu(p, p.get_his_mate(), null, null, null);
       if (p.get_points() != p.point_analysis()) {
         console.log("Points ajoutés : " + (p.point_analysis() - p.get_points()));
-        p.set_points(p.point_analysis());
+        if(p.get_his_room().get_koikoi())
+          p.set_points(p.point_analysis()*2);
+        else p.set_points(p.point_analysis());
+
         new_points(p, p.get_points());
       } else {
         console.log("tour_suivant");
-        etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
+        if(p.get_his_mate().get_hand().length == 0) {
+          end_of_round(p.get_his_mate(), 0);
+        } else {
+          etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
+        }
       }
       console.log("points du joueur = " + p.get_points());
     }
@@ -246,8 +253,22 @@ io.on('connection', (socket) => {
       }
       cpt++;
     }
+    end_of_round(p, p.get_points());
 
-    p.add_point_game(p.get_points());
+  });
+
+  socket.on('resume_round', () => {
+    // stocker le koi koi pour le x2 potentiel
+    // continuer le tour
+    p.get_his_room().true_koikoi();
+    console.log("tour_suivant");
+    etat_du_jeu(p.get_his_mate(), p, 'turn', null, null);
+
+  });
+
+  function end_of_round(p, points) {
+
+    p.add_point_game(points);
     p.get_his_mate().add_point_game(0);
 
     console.log('');
@@ -267,15 +288,7 @@ io.on('connection', (socket) => {
     p.get_his_room().init_stack();
 
     start(p.get_his_room(), p);
-
-  });
-
-  socket.on('resume_round', () => {
-    // stocker le koi koi pour le x2 potentiel
-    // continuer le tour
-    console.log('resume');
-  });
-
+  }
 });
 
 

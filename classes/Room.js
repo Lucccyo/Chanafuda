@@ -7,7 +7,7 @@ class Room {
   name;
   board;
   turn;
-
+  koikoi = false;
   round_month;
   // card_sent_fp;
 
@@ -22,7 +22,16 @@ class Room {
   }
 
   init_stack() {
-    this.stack = Array.from(Card.get_sort_stack());
+    this.stack = Card.shuffle(Array.from(Card.get_sort_stack()));
+    this.koikoi = false;
+  }
+
+  true_koikoi() {
+    this.koikoi = true;
+  }
+
+  get_koikoi() {
+    return this.koikoi;
   }
 
   add_p2(p2) {

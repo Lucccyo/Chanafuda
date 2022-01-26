@@ -181,7 +181,7 @@ class Player {
     if (count_animal >= 5 && !contain_ISC) sum += count_animal - 4;
     if (contain_ISC) sum =+ 5 + (count_animal - 3);
 
-    if (!contain_3poetry && !!contain_3blue && count_ribbon >= 5) sum += count_ribbon - 4;
+    if (!contain_3poetry && !contain_3blue && count_ribbon >= 5) sum += count_ribbon - 4;
     if (contain_3poetry && contain_3blue) sum += 10 + (count_ribbon - 6);
     if (contain_3poetry ^ contain_3blue) sum += 5 + (count_ribbon - 3);
 

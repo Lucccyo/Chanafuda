@@ -301,16 +301,16 @@ class Card {
 
     //use : choose your 07 card and you are going to be able to make a choice on the board
     new Card('07', 'RR'); // p1
-    new Card('09', 'RV'); // p1
+    new Card('09', 'RB'); // p1
     new Card('11', 'BR'); // board
     new Card('07', 'AI'); // board 
     new Card('05', 'RR'); // p2
     new Card('12', 'BD'); // p2
     new Card('04', 'RR'); // p1
-    new Card('10', 'RV'); // p1
+    new Card('10', 'RB'); // p1
     new Card('09', 'AW'); // board
     new Card('03', '02'); // board
-    new Card('06', 'RV'); // p2
+    new Card('06', 'RB'); // p2
     new Card('08', 'A0'); // p2
     new Card('06', '02'); // p1
     new Card('08', '02'); // p1
