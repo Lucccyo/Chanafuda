@@ -14,8 +14,8 @@ class Room {
   constructor(name, p1) {
     this.p1 = p1;
     this.name = name;
-    // this.stack = Array.from(Card.get_sort_stack());
-    this.stack = Card.shuffle(Array.from(Card.get_sort_stack()));
+    this.stack = Array.from(Card.get_sort_stack());
+    // this.stack = Card.shuffle(Array.from(Card.get_sort_stack()));
     this.board = new Array();
     this.turn = p1.get_id();
     this.round_month = 1;
@@ -28,6 +28,10 @@ class Room {
 
   true_koikoi() {
     this.koikoi = true;
+  }
+
+  set_stack(stack) {
+    this.stack = stack;
   }
 
   get_koikoi() {

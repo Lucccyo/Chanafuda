@@ -31,7 +31,7 @@ var public_stack = new Array();
 server.listen(3000, () => {
   console.log('listening on *:3000');
   console.log('');
-  Card.script_cards();
+  Card.script3_cards();
 });
 // *******
 
@@ -279,11 +279,12 @@ io.on('connection', (socket) => {
     Player.display_tab(p.get_his_mate().get_points_game());
     console.log('');
 
-    p.get_hand().length = 0;
-    p.get_his_mate().get_hand().length = 0;
-    p.get_his_room().get_board().length = 0;
-    p.get_depository().length = 0;
-    p.get_his_mate().get_depository().length = 0;
+
+    p.get_hand().splice(0);
+    p.get_his_mate().get_hand().splice(0);
+    p.get_his_room().get_board().splice(0);
+    p.get_depository().splice(0);
+    p.get_his_mate().get_depository().splice(0);
 
     p.get_his_room().init_stack();
 

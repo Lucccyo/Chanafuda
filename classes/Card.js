@@ -55,16 +55,17 @@ class Card {
   // initialisation start of a turn
   static init(r) {
     // departure
-    let stack = r.get_stack();
+    
     // arrival
     let hand_p1 = r.get_p1().get_hand();
     let hand_p2 = r.get_p2().get_hand();
     let board = r.get_board();
     
     while (1) {
-      hand_p1.length = 0;
-      hand_p2.length = 0;
-      board.length = 0;
+      let stack = r.get_stack();
+      hand_p1.splice(0);
+      hand_p2.splice(0);
+      board.splice(0);
 
       Card.distribute(stack, hand_p1, hand_p2, board);
 
@@ -74,7 +75,7 @@ class Card {
       console.log("-- Redistribution");
 
       // stack.length = 0;
-      stack = Card.shuffle(Array.from(Card.get_sort_stack()));
+      r.set_stack(Card.shuffle(Array.from(Card.get_sort_stack())));
     }
   }
 
