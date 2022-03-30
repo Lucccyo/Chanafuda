@@ -93,6 +93,7 @@ function etat_du_jeu(player, enemy, flag, tab_match, card_drawn) {
 }
 
 function new_points(player, count) {
+  console.log("nouveaux points")
   io.to(player.get_id()).emit('points', count);
 }
 
@@ -197,7 +198,8 @@ io.on('connection', (socket) => {
 
     } else {
       etat_du_jeu(p, p.get_his_mate(), null, null, null);
-      if (p.get_points() != p.point_analysis()) {
+      if ( 0 < p.point_analysis() - p.get_points()) {
+        console.log(p.point_analysis())
         console.log("Points ajoutés : " + (p.point_analysis() - p.get_points()));
         if(p.get_his_room().get_koikoi())
           p.set_points(p.point_analysis()*2);
@@ -253,6 +255,8 @@ io.on('connection', (socket) => {
       }
       cpt++;
     }
+    io.to(p.get_id()).emit('start_popup');
+    io.to(p.get_his_mate().get_id()).emit('start_popup');
     end_of_round(p, p.get_points());
 
   });

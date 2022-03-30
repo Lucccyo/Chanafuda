@@ -37,6 +37,8 @@
         <button id="btn_resume">Koi-Koi</button>
         <button id="btn_finish">Finish</button>
       </div>
+      <div class="display_state" id="display_state"></div>
+
       <div class="board">
         <div class="top rangee" id="board_top">
 
@@ -92,6 +94,8 @@
     var btn_resume = document.getElementById('btn_resume');
     var btn_finish = document.getElementById('btn_finish');
 
+    var display_state = document.getElementById('display_state');
+
     // my cards
     socket.on('perso', function (tab) {
       perso_stack.innerHTML = '';
@@ -109,7 +113,7 @@
       div.classList.add('v');
       card_name = 'c'.concat('', nom);
       div.setAttribute('id', card_name);
-      div.innerText = nom;
+      // div.innerText = nom;
       stack.append(div);
     }
     // *******
@@ -151,7 +155,7 @@
       div.setAttribute('id', index);
       card_name = 'c'.concat('', nom);
       div.setAttribute('id', card_name);
-      div.innerText = nom;
+      // div.innerText = nom;
       stack.append(div);
     }
     // *******
@@ -194,6 +198,7 @@
       rib_depo_p.innerHTML = '';
       animal_depo_p.innerHTML = '';
       bright_depo_p.innerHTML = '';
+      display_state.innerHTML = '';
       let cpt_p = 0;
       let cpt_r = 0;
       let cpt_a = 0;
@@ -257,6 +262,10 @@
     });
     // *******
 
+    socket.on('start_popup', function () {
+      alert('bonjour');
+    });
+
 
     // display wich card is drawn
     socket.on('draw', function (card_name) {
@@ -267,15 +276,27 @@
     // *******
     socket.on('points', function (count_points) {
       div_btn.style.visibility = "visible";
+
+      let l = perso_stack.querySelectorAll('.carte').length;
+
+      if(l == 0) {
+        btn_resume.style.visibility = "hidden";
+      }
+
+      let p = document.createElement('p');
+      p.textContent = "Vous avez " + count_points + " points.";
+      display_state.appendChild(p);
     });
 
     btn_resume.addEventListener("click", resume);
     btn_finish.addEventListener("click", finish);
 
     function resume() {
+      display_state.innerHTML = "";
       socket.emit('resume_round');
     }
     function finish() {
+      display_state.innerHTML = "";
       socket.emit('finish_round');
     }
   </script>
