@@ -1,7 +1,6 @@
-// import cards from "./data.js"
 import Card from "./Card.tsx"
 
-function River({ cards }) {
+function AllyHand({ cards }) {
   return (
     <>
     {cards.map( card => (
@@ -11,4 +10,4 @@ function River({ cards }) {
   )
 }
 
-export default River
+export default AllyHand
